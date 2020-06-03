@@ -28,7 +28,7 @@
             <label for="remember">记住我</label>
           </div>
           <input name="commit" @click="login" type="button" value="登录" class="sign-in-button">
-<!--          <moreSign></moreSign>-->
+          <moreSign></moreSign>
         </div>
       </div>
     </div>
@@ -38,6 +38,7 @@
   import Vue from 'vue'
   import { Md5 } from "ts-md5/dist/md5";
   import NavBar from "~/components/NavBar.vue";
+  import MoreSign from '~/components/MoreSign'
 
   export default Vue.extend({
 		name: 'Login',
@@ -45,6 +46,13 @@
       return {
         url: route.query.url
       }
+    },
+    components: {
+      NavBar,
+      MoreSign,
+//      slide,
+//      recommendCollection,
+//      recommendContent
     },
 		data() {
 				return {
@@ -77,13 +85,6 @@
             window.location.href = '/'
           }
 				}
-		},
-		components: {
-				NavBar,
-				// moreSign,
-//      slide,
-//      recommendCollection,
-//      recommendContent
 		},
 		computed: {},
 		async mounted() {
