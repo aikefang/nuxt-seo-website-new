@@ -36,9 +36,9 @@
 </template>
 <script lang="ts">
   import Vue from 'vue'
-  import { Md5 } from "ts-md5/dist/md5";
-  import NavBar from "~/components/NavBar.vue";
-  import MoreSign from '~/components/MoreSign'
+  import { Md5 } from 'ts-md5/dist/md5'
+  import NavBar from '~/components/NavBar.vue'
+  import MoreSign from '~/components/MoreSign.vue'
 
   export default Vue.extend({
 		name: 'Login',
