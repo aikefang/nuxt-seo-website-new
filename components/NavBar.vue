@@ -12,7 +12,7 @@
 							<!--type 0: 相对链接（默认）1：绝对链接-->
 							<ul class="nav">
 								<li class="tab" :class="{'active': active === index}" @click="changeNav(index)"
-										v-for="(item, index) in nav.list" :key="item.id">
+										v-for="(item, index) in global.navlist" :key="item.id">
 									<template v-if="item.type === 0">
 										<router-link :to="item.urlLink">
                                 <span class="menu-text">
@@ -102,7 +102,7 @@
       }
     },
     computed: {
-      ...mapState(['nav', 'login']),
+      ...mapState(['global', 'login']),
       active() {
         return this.$store.state.navStatus
       },
@@ -135,7 +135,6 @@
 //      }
     },
     mounted() {
-      console.log(this.login)
       function scrollTop() {
         return Math.max(
           //chrome

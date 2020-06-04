@@ -25,13 +25,23 @@ const createStore = () => {
       async nuxtServerInit ({ commit }, { req, $axios, store, redirect, route }) {
         const [
           userInfo,
-          navList
+          navList,
+          bannerList,
+          recommendCategoryList,
         ] = await Promise.all([
-          $axios.get('/api/user/info'),
-          $axios.get('/api/nav/list')
+          $axios.get('/api/biji/user/info'),
+          $axios.get('/api/biji/nav/list'),
+          $axios.get('/api/biji/banner/list', {
+            params: {
+              imageMogr2: true
+            }
+          }),
+          $axios.get('/api/biji/category/list', {
+            params: {
+              type: 'hot'
+            }
+          }),
         ])
-        // const userInfo = res[0]
-        // console.log(userInfo)
         if(userInfo.status === 200 && userInfo.data.userStatus === true) {
           store.commit('login/changeStatus', true)
           if (route.name === 'login') {
@@ -39,11 +49,14 @@ const createStore = () => {
             redirect(path.toString())
           }
         }
-
-        // const navList = res[1]
         if(navList.status === 200) {
-          store.commit('nav/setList', navList.data.list)
-          // console.log(store.state.nav.list)
+          store.commit('global/setNavList', navList.data.list)
+        }
+        if(bannerList.status === 200) {
+          store.commit('global/setBannerList', bannerList.data.list)
+        }
+        if(recommendCategoryList.status === 200) {
+          store.commit('global/setRecommendCategoryList', recommendCategoryList.data.list)
         }
       }
     }
