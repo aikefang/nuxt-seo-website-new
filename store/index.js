@@ -26,21 +26,9 @@ const createStore = () => {
         const [
           userInfo,
           navList,
-          bannerList,
-          recommendCategoryList,
         ] = await Promise.all([
           $axios.get('/api/biji/user/info'),
-          $axios.get('/api/biji/nav/list'),
-          $axios.get('/api/biji/banner/list', {
-            params: {
-              imageMogr2: true
-            }
-          }),
-          $axios.get('/api/biji/category/list', {
-            params: {
-              type: 'hot'
-            }
-          }),
+          $axios.get('/api/biji/nav/list')
         ])
         if(userInfo.status === 200 && userInfo.data.userStatus === true) {
           store.commit('login/changeStatus', true)
@@ -51,12 +39,6 @@ const createStore = () => {
         }
         if(navList.status === 200) {
           store.commit('global/setNavList', navList.data.list)
-        }
-        if(bannerList.status === 200) {
-          store.commit('global/setBannerList', bannerList.data.list)
-        }
-        if(recommendCategoryList.status === 200) {
-          store.commit('global/setRecommendCategoryList', recommendCategoryList.data.list)
         }
       }
     }

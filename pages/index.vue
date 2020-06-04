@@ -72,6 +72,29 @@ export default Vue.extend({
     recommendCollection,
     // recommendContent,
     CountDown,
+  },
+  async asyncData({store, route, params, redirect, $axios}) {
+    const [
+      bannerList,
+      recommendCategoryList,
+    ] = await Promise.all([
+      $axios.get('/api/biji/banner/list', {
+        params: {
+          imageMogr2: true
+        }
+      }),
+      $axios.get('/api/biji/category/list', {
+        params: {
+          type: 'hot'
+        }
+      }),
+    ])
+    if(bannerList.status === 200) {
+      store.commit('global/setBannerList', bannerList.data.list)
+    }
+    if(recommendCategoryList.status === 200) {
+      store.commit('global/setRecommendCategoryList', recommendCategoryList.data.list)
+    }
   }
 })
 </script>
