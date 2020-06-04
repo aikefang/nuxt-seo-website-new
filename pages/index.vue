@@ -36,7 +36,7 @@
             <Slide></Slide>
           </keep-alive>
           <keep-alive>
-<!--            <recommendContent></recommendContent>-->
+            <recommendContent></recommendContent>
           </keep-alive>
 <!--          <a class="load-more" v-show="load" @click="loadMore">阅读更多</a>-->
 <!--          <a class="load-more no-click" v-show="!load">暂无更多</a>-->
