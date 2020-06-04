@@ -13,13 +13,11 @@ const mutations = {
   },
   setRecommendCategoryList: (state, list) => {
     state.recommendCategoryList = list
-  },
+  }
 }
 
 const actions = {
-  // setList({ commit }, list) {
-  //   commit('setList', list)
-  // }
+
 }
 
 export default {

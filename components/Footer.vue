@@ -4,11 +4,15 @@
         <div class="technology lin1">
             <span class="title">前端技术栈：</span>
             <div class="list">
-                <span class="jb-all">Vue v2.0</span>
+                <span class="jb-all">TypeScript</span>
+                <span class="jb-all">Vue</span>
+                <span class="jb-all">Nuxt.js v2.11.0</span>
                 <span class="jb-all">vue-cli v2.9.6</span>
-                <span class="jb-all">Element UI v2.3.2</span>
-                <span class="jb-all">Nuxt.js</span>
-                <span class="jb-all">GitHub</span>
+                <span class="jb-all">vuex v3.4.0</span>
+                <span class="jb-all">Element UI v2.13.2</span>
+                <span class="jb-all">Less</span>
+                <span class="jb-all">SSR</span>
+                <span class="jb-all">GitHub Hooks</span>
                 <span class="jb-all">七牛云CDN</span>
                 <span class="jb-all">Service Worker</span>
             </div>
@@ -23,12 +27,13 @@
                 <span class="jb-all">Nginx</span>
                 <span class="jb-all">HTTPS</span>
                 <span class="jb-all">HTTP 2.0</span>
-                <span class="jb-all">MySQL</span>
-                <span class="jb-all">Express</span>
+                <span class="jb-all">MySQL => MongoDB</span>
+                <span class="jb-all">Mongoose v5.7.5</span>
+                <span class="jb-all">Express v4.16.2 => Koa v2.11.0</span>
             </div>
         </div>
         <div class="Copyright">
-            版权所有Copyright 2016-2019, All Rights Reserved <a class="jb-all" href="http://www.miitbeian.gov.cn/">鲁ICP备15001470号</a>
+            版权所有Copyright 2016-{{ new Date().getFullYear() }}, All Rights Reserved <a class="jb-all" href="http://www.miitbeian.gov.cn/">鲁ICP备15001470号</a>
         </div>
     </div>
 </template>
@@ -90,17 +95,22 @@
             .title {
                 /*margin-right: 10px;*/
                 font-size: 14px;
+                width: 90px;
+                padding-top: 4px;
             }
             .list {
                 display: flex;
                 align-items: center;
+                flex-direction: row;
+                flex-wrap: wrap;
+                width: 1110px;
                 span {
                     display: flex;
                     align-items: center;
                     border: 1px solid #999999;
-                    height: 18px;
                     border-radius: 18px;
-                    padding: 2px 5px 2px 5px;
+                    padding: 4px 12px;
+                    margin-bottom: 6px;
                     cursor: pointer;
                     margin-right: 5px;
                     &:hover{

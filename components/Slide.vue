@@ -23,7 +23,7 @@
         ...mapState(['global']),
     },
     mounted() {
-        console.log(this.banner)
+        // console.log(this.banner)
 //      console.log(this.apiData)
       // 改变api的数据
 //      this.$store.commit('setApiData', {
