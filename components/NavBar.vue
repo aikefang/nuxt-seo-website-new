@@ -12,7 +12,7 @@
 							<!--type 0: 相对链接（默认）1：绝对链接-->
 							<ul class="nav">
 								<li class="tab" :class="{'active': active === index}" @click="changeNav(index)"
-										v-for="(item, index) in global.navlist" :key="item.id">
+										v-for="(item, index) in global.navList" :key="item.id">
 									<template v-if="item.type === 0">
 										<router-link :to="item.urlLink">
                                 <span class="menu-text">

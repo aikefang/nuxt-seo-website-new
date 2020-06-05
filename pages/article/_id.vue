@@ -22,7 +22,7 @@
                  v-html="noteContent.content"></div>
           </div>
         </div>
-<!--        <articleHistory :articleId="articleId"></articleHistory>-->
+        <ArticleHistory :list="historyList" :isAuthor="isAuthor"></ArticleHistory>
 <!--        <articleComment @showCommentNum="commentNum" :articleId="articleId" :edit="inline"></articleComment>-->
       </div>
       <div class="other-info">
@@ -120,11 +120,11 @@
   import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
   import NavBar from '~/components/NavBar.vue'
   import BottomFooter from '~/components/Footer.vue'
-  // import articleHistory from '~/components/article-history.vue'
+  import ArticleHistory from '~/components/ArticleHistory.vue'
   // import articleComment from '~/components/article-comment.vue'
 
   export default {
-    name: 'articleDetail',
+    name: 'ArticleDetail',
     head() {
       let scriptOrigin = [
         {src: '//static.webascii.cn/webascii/syntaxhighlighter_2.1.382/scripts/shCore.js'},
@@ -206,10 +206,20 @@
           return
         }
       }
-      let noteContent = await store.dispatch('article/getDetails', {
+      const noteContent = await store.dispatch('article/getDetails', {
         id: params.id,
         imageMogr2: route.query.inline == 'edit' ? 0 : 1
       })
+
+
+
+      const historyListRes = await $axios.get('/api/biji/article/historyList', {
+        params: {
+          id: params.id
+        }
+      })
+
+
 
         // /api/biji/article/redirect
 
@@ -240,7 +250,8 @@
         // 存储文章ID
         articleId: params.id,
         inline: route.query.inline,
-        zan: noteContent.data.note.zanStr
+        zan: noteContent.data.note.zanStr,
+        historyList: historyListRes.data.list
       }
     },
     data() {
@@ -251,7 +262,7 @@
     components: {
       NavBar,
       BottomFooter,
-      // articleHistory,
+      ArticleHistory,
       // articleComment
     },
     computed: {

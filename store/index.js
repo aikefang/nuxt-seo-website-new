@@ -27,7 +27,7 @@ const createStore = () => {
           userInfo,
           navList,
         ] = await Promise.all([
-          $axios.get('/api/biji/user/info'),
+          $axios.get('/api/user/info'),
           $axios.get('/api/biji/nav/list')
         ])
         if(userInfo.status === 200 && userInfo.data.userStatus === true) {
