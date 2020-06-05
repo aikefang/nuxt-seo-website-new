@@ -41,7 +41,8 @@ module.exports = {
   */
   plugins: [
     '@/plugins/element-ui',
-    '@/plugins/axios'
+    '@/plugins/axios',
+    '@/plugins/vue-filter',
   ],
   /*
   ** Nuxt.js dev-modules

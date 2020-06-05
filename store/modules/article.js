@@ -43,6 +43,15 @@ const actions = {
     }
     commit('setLoading', false)
     commit('setPageNum')
+  },
+  async getDetails({ commit, state }, data) {
+    let res = await this.$axios.get('/api/biji/article/details', {
+      params: {
+        imageMogr2: data.imageMogr2,
+        id: data.id,
+      }
+    })
+    return res
   }
 }
 
