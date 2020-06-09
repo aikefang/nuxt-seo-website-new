@@ -50,7 +50,7 @@
           <h5>作者最新文章</h5>
           <ul>
             <li v-for="item in newNoteList">
-              <a :href="'/article/'+item.id" class="jb-all" target="_blank">
+              <a :href="'/article/' + item._id" class="jb-all" target="_blank">
                 <span>{{item.title}}</span>
                 <img
                   :src="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"

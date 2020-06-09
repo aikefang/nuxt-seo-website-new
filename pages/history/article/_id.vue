@@ -14,10 +14,15 @@
               <span>{{noteContent.simplifyCTime}}</span>
             </el-tooltip>
           </div>
+					<a :href="'/article/' + noteContent.origin._id">
+						<div class="el-card is-hover-shadow">
+							<div style="color: #ea6f5a;" class="el-card__body">
+								原文：{{ noteContent.origin.title }}
+							</div>
+						</div>
+					</a>
+
           <div class="show-content">
-            <!--<div class="describe" v-if="!!noteContent.articleDescribe === true">-->
-            <!--{{noteContent.articleDescribe}}-->
-            <!--</div>-->
             <div id="content-view" class="article-content fr-view"
                  v-html="noteContent.content"></div>
           </div>
@@ -48,18 +53,12 @@
           <h5>作者最新文章</h5>
           <ul>
             <li v-for="item in newNoteList">
-              <a :href="'/article/'+item.id" class="jb-all" target="_blank">
+              <a :href="'/article/' + item._id" class="jb-all" target="_blank">
                 <span>{{item.title}}</span>
                 <img
                   :src="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"
                   alt="">
               </a>
-<!--              <router-link :to="'/article/'+item.id" class="jb-all">-->
-<!--                <span>{{item.title}}</span>-->
-<!--                <img-->
-<!--                  :src="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"-->
-<!--                  alt="">-->
-<!--              </router-link>-->
             </li>
           </ul>
         </div>
@@ -307,18 +306,7 @@
           display: flex;
           position: relative;
           padding: 15px 0 25px 0;
-          margin-bottom: 30px;
           font-size: 14px;
-          &:after {
-            display: block;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            height: .0625rem;
-            background: #ececec;
-            content: '';
-            position: absolute;
-          }
           span {
             position: relative;
             padding-right: 14px;
