@@ -249,7 +249,7 @@
           imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
 //          imageInsertButtons: ['imageBack', '|', 'imageUpload', 'imageByURL'],
           imageInsertButtons: ['imageBack', 'imageUpload'],
-          fileUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          fileUploadURL: `/api/upload/files`,
           fileUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,
@@ -262,7 +262,7 @@
 //            H4: 'Heading 4',
             "PRE class='webascii-code javascript'": 'javascript'
           },
-          imageUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          imageUploadURL: `/api/upload/files`,
           imageUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,
@@ -446,7 +446,7 @@
           imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
 //          imageInsertButtons: ['imageBack', '|', 'imageUpload', 'imageByURL'],
           imageInsertButtons: ['imageBack', 'imageUpload'],
-          fileUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          fileUploadURL: `/api/upload/files`,
           fileUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,
@@ -459,7 +459,7 @@
 //            H4: 'Heading 4',
 //            "PRE class='webascii-code javascript'": 'javascript'
           },
-          imageUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          imageUploadURL: `/api/upload/files`,
           imageUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,

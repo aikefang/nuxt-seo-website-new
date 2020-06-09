@@ -22,8 +22,6 @@
                  v-html="noteContent.content"></div>
           </div>
         </div>
-        <ArticleHistory :list="historyList" :isAuthor="isAuthor"></ArticleHistory>
-        <ArticleComment @changeCommentNum="commentNum" :articleId="articleId" :edit="inline"></ArticleComment>
       </div>
       <div class="other-info">
         <div class="author-info">
@@ -66,43 +64,6 @@
           </ul>
         </div>
       </div>
-    </div>
-    <div class="flex-menu-left">
-      <ul>
-        <el-tooltip effect="dark" content="当前页面编辑" placement="right">
-          <li class="jb-all bg-cb edit-fast no-number" v-if="isAuthor && inline != 'edit'">
-            <a :href="'/article/' + articleId + '?inline=edit'">
-              <i class="iconfont icon-tuanduicankaoxian-"></i>
-              <span class="name">快编</span>
-            </a>
-          </li>
-        </el-tooltip>
-        <el-tooltip effect="dark" content="快速保存" placement="right">
-          <li class="jb-all bg-cb submit no-number" v-if="isAuthor && inline == 'edit'"
-              @click="publishEdit(articleId)">
-            <i class="iconfont icon-checkmark-circle"></i>
-            <span class="name">保存</span>
-          </li>
-        </el-tooltip>
-        <el-tooltip effect="dark" content="新页面编辑" placement="right">
-          <li class="jb-all bg-cb edit no-number" v-if="isAuthor">
-            <a :href="'/write/'+articleId">
-              <i class="iconfont icon-bianji"></i>
-              <span class="name">编辑</span>
-            </a>
-          </li>
-        </el-tooltip>
-        <li class="jb-all bg-cb pinglun" @click="goComment">
-          <i class="iconfont icon-pinglun"></i>
-          <span class="name">评论</span>
-          <span class="number">{{commentLength}}</span>
-        </li>
-        <li class="jb-all bg-cb zan" @click="goZan">
-          <i class="iconfont icon-dianzan" ref="zan"></i>
-          <span class="name">赞</span>
-          <span class="number">{{zan}}</span>
-        </li>
-      </ul>
     </div>
     <div class="flex-menu-right">
       <ul>
@@ -193,53 +154,31 @@
     //预请求
     async asyncData({store, route, params, redirect, $axios}) {
       // 需要重定向
-      if (Number(params.id)) {
-        const redirectRes = await $axios.get('/api/biji/article/redirect', {
-          params: {
-            id: params.id
-          }
-        })
-        if (redirectRes.status === 200 && redirectRes.data.needRedirect) {
-          const rArr = route.path.split('/')
-          rArr[2] = redirectRes.data.redirect
-          redirect(`${rArr.join('/')}`)
-          return
-        }
-      }
-      const noteContent = await store.dispatch('article/getDetails', {
-        id: params.id,
-        imageMogr2: route.query.inline == 'edit' ? 0 : 1
-      })
+      // if (Number(params.id)) {
+      //   const redirectRes = await $axios.get('/api/biji/article/redirect', {
+      //     params: {
+      //       id: params.id
+      //     }
+      //   })
+      //   if (redirectRes.status === 200 && redirectRes.data.needRedirect) {
+      //     const rArr = route.path.split('/')
+      //     rArr[2] = redirectRes.data.redirect
+      //     redirect(`${rArr.join('/')}`)
+      //     return
+      //   }
+      // }
 
 
+      // const noteContent = await store.dispatch('article/getDetails', {
+      //   id: params.id,
+      //   imageMogr2: route.query.inline == 'edit' ? 0 : 1
+      // })
 
-      const historyListRes = await $axios.get('/api/biji/article/historyList', {
+      const noteContent = await $axios.get('/api/biji/article/historyDetails', {
         params: {
           id: params.id
         }
       })
-
-
-
-        // /api/biji/article/redirect
-
-      // console.log(noteContent)
-// //      let noteCommentList = store.dispatch('noteCommentList', {
-// //        articleId: params.id, // 文章ID
-// //      })
-//       let zan = '0'
-//       await Promise.all([noteContent])
-//         .then(info => {
-//           store.dispatch('setApiData', {
-//             key: 'noteContent',
-//             data: info[0].data.note
-//           })
-//           zan = info[0].data.note.zanStr
-//         })
-//         .catch(e => {
-//           // 重定向
-//           redirect('/error')
-//         })
       return {
         noteContent: noteContent.data.note,
         isAuthor: noteContent.data.isAuthor,
@@ -247,12 +186,8 @@
         allViews: noteContent.data.allViews,
         allViewsStr: noteContent.data.allViewsStr,
         newNoteList: noteContent.data.newNoteList,
-        userCommentAllNum: noteContent.data.userCommentAllNum,
         // 存储文章ID
         articleId: params.id,
-        inline: route.query.inline,
-        zan: noteContent.data.note.zanStr,
-        historyList: historyListRes.data.list
       }
     },
     data() {
@@ -263,48 +198,11 @@
     components: {
       NavBar,
       BottomFooter,
-      ArticleHistory,
-      ArticleComment
     },
     computed: {
-      // ...mapState(['apiData']),
       ...mapState(['login'])
     },
     methods: {
-//      edit() {
-////        console.log(this.articleId)
-//      },
-      commentNum(data) {
-        this.commentLength = data
-      },
-      // 去评论
-      goComment() {
-        if (!this.login.status) {
-          window.location.href = `/login/?url=${encodeURIComponent(window.location.pathname)}`
-          return
-        }
-        $('html,body').animate({scrollTop: $('#reply-edit').offset().top - 400 + "px"}, 300)
-        $('#reply-edit').froalaEditor('events.focus')
-      },
-      // 点赞
-      async goZan() {
-        clearTimeout(zanSet)
-        let zanDom = $('.icon-dianzan')
-        zanDom.addClass('nice-in')
-        let zanSet = setTimeout(() => {
-          zanDom.removeClass('nice-in')
-        }, 1000)
-        const res = await this.$axios.post('/api/biji/article/zan', {
-          id: this.articleId
-        }).catch(e => {
-          this.$message.error('点赞失败，请重新尝试')
-        })
-        if (res.status === 200) {
-          this.zan = res.data.zanStr
-        } else {
-          this.$message.error('点赞失败，请重新尝试')
-        }
-      },
       previewImg(src) {
         this.$alert(`<img src="${src}">`, {
           dangerouslyUseHTMLString: true,
@@ -360,42 +258,6 @@
           }
         })
       },
-      async publishEdit(id) {
-//        let preDom = $('pre')
-//        for (let item = 0; item < preDom.length; item++) {
-//          hljs.highlightBlock(preDom[item])
-//        }
-//         this.$store.dispatch('editNoteContent', {
-//           id: id, // 文章ID
-//           content: this.editDom.froalaEditor('html.get'), // 内容
-//         })
-//           .then(info => {
-//             this.$message.success('编辑文章成功，2秒后传送至文章内容~')
-//             window.location.href = `/article/${info.data.id}`
-//           })
-//           .catch(error => {
-//             this.$message.error('编辑文章失败')
-//           })
-
-        console.log(this.editDom.froalaEditor('html.get'))
-
-        const res = await this.$axios.post(`/api/biji/article/edit`, {
-          allContent: {
-            id: id, // 文章ID
-            content: this.editDom.froalaEditor('html.get'), // 内容
-          }
-        }).catch(error => {
-          this.$message.error('编辑文章失败')
-        })
-        // console.log(res)
-
-        if (res.status === 200) {
-          this.$message.success('编辑文章成功，2秒后传送至文章内容~')
-          window.location.href = `/article/${res.data.id}`
-        }
-
-
-      },
       goTop() {
         let target = 0
         clearInterval(timer);
@@ -409,100 +271,19 @@
         }, 10)
       },
     },
-    created() {
-      // console.log(123123)
-    },
     mounted() {
       this.$nextTick(() => {
-        // this.$on('change_comment_num', (num) => {
-        //   console.log(123123123)
-        //   this.commentNum(num)
-        // })
-        // 如果是编辑
-        if (this.inline === 'edit' && this.$route.name == 'article-id' && this.isAuthor === true) {
-          this.realTimeEdit()
-        } else { // 不是编辑
-          SyntaxHighlighter.config.clipboardSwf = '//static.webascii.cn/webascii/syntaxhighlighter_2.1.382/scripts/clipboard.swf';
-          SyntaxHighlighter.config.strings = {
-            expandSource: '展开代码',
-//            viewSource :'查看代码',
-//            copyToClipboard :'复制代码',
-//            copyToClipboardConfirmation :'代码复制成功',
-//            print :'打印',
-//            help:'?',
-//            alert:'语法高亮\n\n',
-//            noBrush:'不能找到刷子: ',
-//            brushNotHtmlScript:'刷子没有配置html-script选项',
-//            aboutDialog:'<div></div>'
-          };
-          SyntaxHighlighter.defaults['auto-links'] = false
-          SyntaxHighlighter.all();
+        SyntaxHighlighter.config.clipboardSwf = '//static.webascii.cn/webascii/syntaxhighlighter_2.1.382/scripts/clipboard.swf'
+        SyntaxHighlighter.config.strings = {
+          expandSource: '展开代码'
         }
+        SyntaxHighlighter.defaults['auto-links'] = false
+        SyntaxHighlighter.all()
       })
       window.previewImg = this.previewImg
     },
   }
 </script>
-<style lang="less">
-  .preview-img.el-message-box {
-    width: inherit;
-    min-width: 300px;
-    min-height: 200px;
-  }
-  .article-content, .reply-edit {
-    ul {
-      list-style: inherit;
-      padding-left: 40px;
-      position: relative;
-      &:after {
-        position: absolute;
-        content: '\e601';
-        font-size: 12px;
-        left: 0;
-        top: 2px;
-        color: #f56c6c;
-        font-family: "iconfont" !important;
-        /*font-size: 16px;*/
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      li {
-        padding-bottom: 5px;
-      }
-    }
-    ol {
-      position: relative;
-      &:after {
-        position: absolute;
-        content: '\e600';
-        font-size: 12px;
-        left: 0;
-        top: 2px;
-        color: #f56c6c;
-        font-family: "iconfont" !important;
-        /*font-size: 16px;*/
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-      li {
-        padding-bottom: 5px;
-      }
-    }
-  }
-  .article-content, .article-comment {
-    a[href] {
-      color: #333;
-      &:hover {
-        color: #ea6f5a;
-      }
-    }
-    img {
-      max-width: 100%;
-    }
-  }
-</style>
 <style scoped lang="less">
   .note {
     position: relative;
