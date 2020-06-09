@@ -23,7 +23,7 @@
           </div>
         </div>
         <ArticleHistory :list="historyList" :isAuthor="isAuthor"></ArticleHistory>
-<!--        <articleComment @showCommentNum="commentNum" :articleId="articleId" :edit="inline"></articleComment>-->
+        <ArticleComment @changeCommentNum="commentNum" :articleId="articleId" :edit="inline"></ArticleComment>
       </div>
       <div class="other-info">
         <div class="author-info">
@@ -121,7 +121,7 @@
   import NavBar from '~/components/NavBar.vue'
   import BottomFooter from '~/components/Footer.vue'
   import ArticleHistory from '~/components/ArticleHistory.vue'
-  // import articleComment from '~/components/article-comment.vue'
+  import ArticleComment from '~/components/ArticleComment.vue'
 
   export default {
     name: 'ArticleDetail',
@@ -247,6 +247,7 @@
         allViews: noteContent.data.allViews,
         allViewsStr: noteContent.data.allViewsStr,
         newNoteList: noteContent.data.newNoteList,
+        userCommentAllNum: noteContent.data.userCommentAllNum,
         // 存储文章ID
         articleId: params.id,
         inline: route.query.inline,
@@ -263,11 +264,11 @@
       NavBar,
       BottomFooter,
       ArticleHistory,
-      // articleComment
+      ArticleComment
     },
     computed: {
-      ...mapState(['apiData']),
-      ...mapState(['loginStatus'])
+      // ...mapState(['apiData']),
+      ...mapState(['login'])
     },
     methods: {
 //      edit() {
@@ -278,7 +279,7 @@
       },
       // 去评论
       goComment() {
-        if (!this.loginStatus) {
+        if (!this.login.status) {
           window.location.href = `/login/?url=${encodeURIComponent(window.location.pathname)}`
           return
         }
@@ -334,13 +335,15 @@
           paragraphFormatSelection: true,
           imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
           imageInsertButtons: ['imageBack', '|', 'imageUpload', 'imageByURL'],
-          fileUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          // fileUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          fileUploadURL: `/api/upload/files`,
           fileUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,
           },
           paragraphFormat: this.$store.state.paragraphFormat,
-          imageUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          // imageUploadURL: `${this.$store.state.apiPath}/api/editor/upload/files`,
+          imageUploadURL: `/api/upload/files`,
           imageUploadParams: {
             // loginToken: that.$store.state.Cookies.loginToken,
             // userId: that.$store.state.Cookies.userId,
@@ -406,8 +409,15 @@
         }, 10)
       },
     },
+    created() {
+      // console.log(123123)
+    },
     mounted() {
       this.$nextTick(() => {
+        // this.$on('change_comment_num', (num) => {
+        //   console.log(123123123)
+        //   this.commentNum(num)
+        // })
         // 如果是编辑
         if (this.inline === 'edit' && this.$route.name == 'article-id' && this.isAuthor === true) {
           this.realTimeEdit()

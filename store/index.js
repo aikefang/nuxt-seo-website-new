@@ -32,6 +32,7 @@ const createStore = () => {
         ])
         if(userInfo.status === 200 && userInfo.data.userStatus === true) {
           store.commit('login/changeStatus', true)
+          store.commit('global/setUserInfo', userInfo.data.userInfo)
           if (route.name === 'login') {
             const path = route.query.url || '/'
             redirect(path.toString())

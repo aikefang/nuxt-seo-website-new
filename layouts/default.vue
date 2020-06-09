@@ -382,6 +382,13 @@
     box-sizing: border-box;
   }
 
+  /*quote下的syntaxhighlighter用于呈现文章详情内评论中的引用的样式*/
+  .quote {
+    .syntaxhighlighter {
+      font-size: 12px !important;
+    }
+  }
+
   .syntaxhighlighter {
     /*border-left: 3px solid #3d7e9a !important;*/
     background: #f3f4f5 !important;

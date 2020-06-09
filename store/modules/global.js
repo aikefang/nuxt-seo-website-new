@@ -2,6 +2,7 @@ const state = {
   bannerList: [],
   navList: [],
   recommendCategoryList: [],
+  userInfo: {}
 }
 
 const mutations = {
@@ -13,7 +14,10 @@ const mutations = {
   },
   setRecommendCategoryList: (state, list) => {
     state.recommendCategoryList = list
-  }
+  },
+  setUserInfo: (state, data) => {
+    state.userInfo = data
+  },
 }
 
 const actions = {
