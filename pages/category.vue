@@ -1,106 +1,171 @@
 <template>
   <div>
     <NavBar></NavBar>
-    123123123123
+    <div class="content-main">
+      <div class="note-content">
+        <div class="column-left">
+          <div style="padding: 20px">
+            <h3 class="titlebar">笔记</h3>
+            <div class="cat-nav-area">
+              <dl class="cat-nav cat-bg cat-primarybright">
+                <dt>分类：</dt>
+                <dd>
+                  <div class="clear">
+<!--                    <router-link to="/" class="logo">-->
+                    <router-link
+                      :to="'/category/'"
+                      :class="{'selected':(!categoryType && !categoryChildType) || (categoryType === '0' && categoryChildType === '0')}"
+                      class="cur jb-all">
+                      全部
+                    </router-link>
+
+                    <router-link class="cur jb-all"
+                       v-for="item in category"
+                       :to="'/category/'+item.seo + '/'"
+                       :key="item._id"
+                       :class="{selected: item.seo === categoryType}">
+                      {{item.title}}
+                    </router-link>
+                  </div>
+                  <div style="display: block" class="category-children-box"
+                       v-for="item in category"
+                       :key="item._id"
+                       v-show="categoryType === item.seo">
+                    <router-link
+                      class="cur jb-all"
+                      :to="'/category/' + item.seo + '/' + cItem.seo + '/'"
+                      :key="cItem._id"
+                      v-for="cItem in item.children"
+                      :class="{selected: cItem.seo === categoryChildType}">
+                      {{cItem.title}}
+                    </router-link>
+                  </div>
+                </dd>
+              </dl>
+              <dl class="cat-nav cat-bg cat-primarybright">
+                <dt class="search-text">搜索：</dt>
+                <dd>
+                  <div class="search">
+                    <el-input id="searchInput" v-model="keyword" ref="sv"
+                              @keyup.enter.native="search" style="width: 500px">
+                      <el-button @click="search" slot="append" icon="search">搜索</el-button>
+                    </el-input>
+                  </div>
+                </dd>
+              </dl>
+            </div>
+
+            <div class="note-category boxs">
+              <div class="article-empty" v-show="list.length <= 0">
+                <i class="iconfont icon-kong"></i>
+                <span>暂无相关笔记</span>
+              </div>
+              <div class="node-box"
+                   v-for="item in list" :key="item._id">
+                <a class="article-image-view" :href="'/article/' + item._id + '/'">
+                  <img :src="item.articleImageViewPc" alt="">
+                </a>
+                <div class="noteinfo">
+                  <h2 class="media-heading">
+                    <a
+                      :href="'/article/' + item._id + '/'"
+                      v-html="item.title"
+                      class="title tof cur jb-col blue"></a>
+                  </h2>
+                  <div class="media">
+                    <p class="media-body">
+                      {{item.articleDescribe || '作者很懒，什么都没有留下。。'}}
+                    </p>
+                  </div>
+                  <div class="media-info">
+                    <em class="ml0">浏览：</em>
+                    <span>{{item.views}}</span>
+                    <em>分类：</em>
+                    <span>
+                        <a
+                          :href="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'"
+                          class="cur jb-all">
+                            {{item.levelSecond.title}}
+                        </a>
+                    </span>
+                    <em>作者：</em>
+                    <span>
+                        <a href="javascript:;" class="author_name tof author_link jb-all">
+                            {{item.author.nickname}}
+                        </a>
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="article-placeholder" v-show="isLoading && hasMore">
+                <div class="img"></div>
+                <div class="content">
+                  <div class="title"></div>
+                  <div class="describe">
+                    <div class="text"></div>
+                    <div class="text"></div>
+                  </div>
+                  <div class="meta"></div>
+                </div>
+              </div>
+              <div class="article-empty" v-show="!isLoading && !hasMore && list.length > 0">
+                <i class="iconfont icon-kong"></i>
+                <span>暂无更多~</span>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
     <BottomFooter></BottomFooter>
   </div>
 </template>
 
 <script>
-  import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
-  //  import Nuxt from "../../website-bak/.nuxt/components/nuxt";
   import NavBar from '~/components/NavBar.vue'
   import BottomFooter from '~/components/Footer.vue'
+  import _ from 'lodash'
 
-//   let noteSearchFn = async ({store, page, categoryFirst, categorySecond, key}) => {
-//     let noteSearch = store.dispatch('noteSearch', {
-// //      category: 'all',
-//       categoryFirst: Number(categoryFirst),
-//       categorySecond: Number(categorySecond),
-//       pageSize: 20,
-//       pageNum: page,
-//       key: key,
-//     })
-//     return await noteSearch
-//   }
-//   let asyncDefault = async ({store, params}) => {
-//     let categoryFirst = 0 // 一级分类
-//     let categorySecond = 0 // 二级分类
-// //    let categoryId = ''
-//     if (!!Number(params.level1) != false && !!Number(params.level1) != false) {
-// //      categoryId = `${params.level1},${params.level2}`
-//       categoryFirst = params.level1 || categoryFirst
-//       categorySecond = params.level2 || categorySecond
-//     }
-//     if (!!Number(params.level1) != false && !!Number(params.level2) == false) {
-// //      categoryId = `${params.level1}`
-//       categoryFirst = params.level1 || categoryFirst
-//     }
-//     let noteSearch = noteSearchFn({
-//       store,
-//       page: params.page || 1,
-// //      category: categoryId,
-//       categoryFirst,
-//       categorySecond,
-//       key: params.keywords || ''
-//     })
-//     let allCategory = store.dispatch('category', {
-//       type: 'all'
-//     })
-//     let allCategoryArr = []
-//     await Promise.all([noteSearch, allCategory])
-//       .then(info => {
-//         store.dispatch('setApiData', {
-//           key: 'noteSearch',
-//           value: info[0].data.note
-//         })
-//         store.dispatch('setApiData', {
-//           key: 'allCategory',
-//           value: info[1].data.category
-//         })
-//         allCategoryArr = info[1].data.category
-//       })
-//       .catch(e => {
-//         console.log(e)
-//         // 重定向
-// //          redirect('/error')
-//       })
-//     store.dispatch('setState', {
-//       key: 'category',
-//       value: params.level1 || 0
-//     })
-//     store.dispatch('setState', {
-//       key: 'page',
-//       value: params.page || 1
-//     })
-//     store.dispatch('setState', {
-//       key: 'categoryChild',
-//       value: params.level2 || 0
-//     })
-//     store.dispatch('setState', {
-//       key: 'keywords',
-//       value: params.keywords || ''
-//     })
-//
-//     return {
-//       keywords: params.keywords || '',
-//       keywordsCache: params.keywords || '',
-//       page: params.page || 1,
-//       allCategoryArr
-//     }
-//   }
+
+  const noteSearchFn = async ({keyword, page, category, params, $axios}) => {
+    const firstId  = category.find(data => {
+      if (data.seo === params.level1) {
+        return true
+      }
+    })
+    let secondId = null
+    if (firstId && firstId.children) {
+      secondId = firstId.children.find(data => {
+        if (data.seo === params.level2) {
+          return true
+        }
+      })
+    }
+
+    const listRes = await $axios.get(`/api/biji/article/search`, {
+      params: {
+        keyword,
+        pageNum: page,
+        levelFirst: firstId ? firstId._id : null,
+        levelSecond: secondId ? secondId._id : null
+      }
+    })
+
+    return listRes
+  }
 
 
   export default {
     name: 'CategoryClass',
     head() {
       let title = ''
-      if (this.level1Str === '' && this.level2Str === '') {
-        title = '笔记网技术文档 - webascii.cn'
-      } else if (this.level1Str !== '' && this.level2Str === '') {
-        title = `${this.level1Str}技术文档 - 笔记网 - webascii.cn`
+      if (this.categoryType === null && this.categoryChildType === null) {
+        title = '笔记网技术文档 - 全部文档 - webascii.cn'
+      } else if (this.categoryType !== null && this.categoryChildType === null) {
+        title = `${this.categoryType}技术文档 - 笔记网 - webascii.cn`
       } else {
-        title = `${this.level1Str}技术_${this.level2Str}技术文档 - 笔记网 - webascii.cn`
+        title = `${this.categoryType}技术_${this.categoryChildType}技术文档 - 笔记网 - webascii.cn`
       }
       return {
         title
@@ -124,7 +189,7 @@
             ids
           }
         })
-        console.log(redirectRes)
+        // console.log(redirectRes)
         if (redirectRes.status === 200 && redirectRes.data.needRedirect) {
           const pathArr = route.path.split('/')
           if (pathArr[2]) {
@@ -138,349 +203,188 @@
       }
 
 
-      // store.state.navStatus = 1
-      // let rel = await asyncDefault({store, params})
-      // let level1Str = ''
-      // let level2Str = ''
-      // for (let i = 0; i < rel.allCategoryArr.length; i++) {
-      //   if (rel.allCategoryArr[i].id === Number(store.state.category)) {
-      //     level1Str = rel.allCategoryArr[i].title
-      //     for (let x = 0; x < rel.allCategoryArr[i].children.length; x++) {
-      //       if (rel.allCategoryArr[i].children[x].id === Number(store.state.categoryChild)) {
-      //         level2Str = rel.allCategoryArr[i].children[x].title
-      //         break
-      //       }
-      //     }
-      //     break
-      //   }
-      // }
-      // return {
-      //   level1Str,
-      //   level2Str,
-      //   ...rel
-      // }
-      //      return {
-      //        keywords: params.keywords || '',
-      //        keywordsCache: params.keywords || '',
-      //        page: params.page || 1
-      //      }
+      const categoryRes = await $axios.get(`/api/biji/category/list`, {
+        params: {
+          type: 'all'
+        }
+      })
+
+      const listRes = await noteSearchFn({
+        route,
+        params,
+        category: categoryRes.data.list,
+        $axios,
+        keyword: route.query.keyword,
+        page: route.query.page,
+      })
+
+      const data = {
+        list: listRes.data.note.list,
+        category: categoryRes.data.list,
+        keyword: '',
+        page: 1,
+        categoryType: null,
+        categoryChildType: null,
+        hasMore: listRes.data.note.list.length === 20 ? true : false
+      }
+      if (params.level1) {
+        data.categoryType = params.level1
+      }
+      if (params.level2) {
+        data.categoryChildType = params.level2
+      }
+      if (route.query.keyword) {
+        data.keyword = route.query.keyword
+      }
+      if (route.query.page) {
+        data.page = route.query.page
+      }
+      return data
     },
     data() {
       return {
-        // lastSearch: null,
-        // lastSearchCache: null
+        isLoading: false
       }
     },
-//     validate({params, route}) {
-// //      console.log(params.page)
-//       // 必须为数字
-//       return (params.level1 == undefined || /^\d+$/.test(params.level1)) && (params.level1 == undefined || /^\d+$/.test(params.level1)) && (params.page == undefined || /^\d+$/.test(params.page))
-//     },
     watch: {
-//       async '$route'(to, from) {
-//         this.$store.dispatch('setState', {
-//           key: 'category',
-//           value: to.params.level1 || 0
-//         })
-//         this.$store.dispatch('setState', {
-//           key: 'categoryChild',
-//           value: to.params.level2 || 0
-//         })
-//         this.$store.dispatch('setState', {
-//           key: 'keywords',
-//           value: to.params.keywords || ''
-//         })
-//         this.$store.dispatch('setState', {
-//           key: 'page',
-//           value: to.params.page || 1
-//         })
-//
-//         let categoryFirst = 0 // 一级分类
-//         let categorySecond = 0 // 二级分类
-// //        let categoryId = ''
-//         if (!!Number(to.params.level1) != false && !!Number(to.params.level2) != false) {
-// //          categoryId = `${to.params.level1},${to.params.level2}`
-//           categoryFirst = to.params.level1
-//           categorySecond = to.params.level2
-//
-//         }
-//         if (!!Number(to.params.level1) != false && !!Number(to.params.level2) == false) {
-// //          categoryId = `${to.params.level1}`
-//           categoryFirst = to.params.level1
-//         }
-// //        console.log(to.params.keywords)
-//         await noteSearchFn({
-//           store: this.$store,
-//           page: to.params.page || 1,
-// //          category: categoryId,
-//           categoryFirst,
-//           categorySecond,
-//           key: to.params.keywords || ''
-//         })
-//           .then(info => {
-//             this.$store.dispatch('setApiData', {
-//               key: 'noteSearch',
-//               value: info.data.note
-//             })
-//           })
-//           .catch(error => {
-//             console.log(error)
-//           })
-//
-//       },
-//       keywords(newVal) {
-//         clearTimeout(this.lastSearch)
-//         this.$store.dispatch('setState', {
-//           key: 'keywords',
-//           value: newVal
-//         })
-//         this.lastSearch = setTimeout(() => {
-//           this.search({pageNum: 1})
-//         }, 500)
-//       },
-//       // 为了换成用户不断更新关键字触发view更新造成的性能问题
-//       keywordsCache(newVal) {
-//         clearTimeout(this.lastSearchCache)
-//         this.lastSearchCache = setTimeout(() => {
-//           this.keywords = newVal
-//         }, 500)
-//       },
-//       categoryType() {
-//         this.search({pageNum: 1})
-//       },
-//       categoryChildType() {
-//         this.search({pageNum: 1})
-//       }
+      async '$route'(to, from){
+        if (to.params.level1) {
+          this.categoryType = to.params.level1
+        }
+        if (to.params.level2) {
+          this.categoryChildType = to.params.level2
+        }
+
+        if (!to.params.level1 && !to.params.level2) {
+          this.categoryType = null
+          this.categoryChildType = null
+        }
+
+        if (to.query.keyword) {
+          this.keyword = to.query.keyword
+        }
+
+        if (!to.query.page) {
+          this.$router.push({
+            query: {
+              ...to.query,
+              page: 1
+            }
+          })
+        }
+      },
+      keyword() {
+        clearTimeout(this.lastSearch)
+        if (!this.keyword) {
+          // console.log(this.$route.query)
+          const query = this.$route.query
+          // delete query.keyword
+          // console.log(query)
+          // console.log(this.$route.query)
+          this.$router.push({
+            query: {
+              ...this.$route.query,
+              keyword: ''
+            }
+          })
+        }
+        this.lastSearch = setTimeout(() => {
+          const query = {
+            ...this.$route.query,
+            page: 1,
+          }
+          if (this.keyword) {
+            query.keyword = this.keyword
+          }
+          this.$router.push({
+            query: query
+          })
+          this.searchData()
+        }, 500)
+      },
+      categoryType() {
+        this.page = 1
+        this.searchData()
+      },
+      categoryChildType() {
+        this.page = 1
+        this.searchData()
+      },
     },
     computed: {
-      ...mapState(['apiData']),
-      //主分类
-      categoryType() {
-        return this.$store.state.category
-      },
-      //子分类
-      categoryChildType() {
-        return this.$store.state.categoryChild
-      },
-//      pageNum () {
-//        return this.$store.state.page
-//      }
-//      // 主分类类型
-//      categoryType() {
-//        return this.$store.state.page.level1 || null
-//      },
-//      // 子分类类型
-//      categoryChildType() {
-//        return this.$store.state.page.level2 || null
-//      },
-//      // 子分类类型
-//      noteList() {
-//        return this.$store.state.api.noteList
-//      },
-//      // 最新笔记
-//      newNote() {
-//        return this.$store.state.api.newNote
-//      },
-//      searchVal () {
-//        return this.$store.state.keywords
-//      },
-//      searchVal: {
-//        get: function () {
-//          return this.$store.state.page.key || ''
-//        },
-//        set: function (val) {
-//          this.$store.commit('setPageData', {
-//            key: 'key',
-//            data: val
-//          })
-//        }
-//      }
+
     },
     methods: {
-      // 分页
-      currentChange(page) {
-//        console.log(this.$route)
-//        this.$store.dispatch('setState', {
-//          key: 'category',
-//          value: this.$route.params.level1 || 0
-//        })
-//        this.$store.dispatch('setState', {
-//          key: 'categoryChild',
-//          value: this.$route.params.level2 || 0
-//        })
-        this.search({pageNum: page})
-//        let params = this.$route.params;
-//        let category = 'all';
-//        if (params.level1 == 0 && params.level2 == 0) {
-//          category = 'all'
-//        } else if (params.level1 != 0 && params.level2 == 0) {
-//          category = [params.level1].toString();
-//        } else {
-//          category = [params.level1, params.level2].toString();
-//        }
-//        $http
-//          .post('/api/biji/search/note', {
-//            key: this.$store.state.page.key,
-//            pageSize: 10,
-//            pageNum: page,
-//            category: category
-//          })
-//          .then(response => {
-//            try {
-//              let data = response.data.data
-//              let reg = new RegExp(params.key, "gi");
-//              data.list.map((t) => {
-//                t.title = t.title.replace(reg, function (res, val, index) {
-//                  return `<span style="color: red">${res}</span>`
-//                })
-//              });
-//              this.$store.commit('setApiData', {
-//                key: 'noteList',
-//                data: data
-//              })
-//            } catch (e) {
-//              this.$store.commit('setApiData', {
-//                key: 'noteList',
-//                data: response.data.data
-//              })
-//            }
-//
-//          })
-//          .catch(e => {
-//            console.log(e)
-//          })
+      async searchData(type) {
+        const that = this
+        const listRes = await noteSearchFn({
+          keyword: this.keyword,
+          page: this.page,
+          category: this.category,
+          params: {
+            level1: that.categoryType,
+            level2: that.categoryChildType,
+          },
+          $axios: this.$axios
+        })
+        if (type === 'push') {
+          this.list.push(...listRes.data.note.list)
+          const query = {
+            ...this.$route.query,
+            page: this.page,
+          }
+          if (this.keyword) {
+            query.keyword = this.keyword
+          }
+          this.$router.push({
+            query: query
+          })
+        } else {
+          this.list = listRes.data.note.list
+          const query = {
+            ...this.$route.query,
+            page: 1,
+          }
+          if (this.keyword) {
+            query.keyword = this.keyword
+          }
+          this.$router.push({
+            query: query
+          })
+        }
+
+        this.hasMore = listRes.data.note.list.length === 20 ? true : false
+
+        this.isLoading = false
       },
       // 搜索
-      search({pageNum}) {
-        clearTimeout(this.lastSearch)
-        let category = this.$store.state.category
-        let categoryChild = this.$store.state.categoryChild
-        let keywords = this.$store.state.keywords
-        let page = pageNum || this.$store.state.page
+      search() {
+        const query = {
+          page: 1
+        }
+        if (this.keyword) {
+          query.keyword = this.keyword
+        }
         this.$router.push({
-          path: `/category/${category}/${categoryChild}/${page}/${keywords}`,
+          path: this.$route.path,
+          query: query
         })
       },
     },
     async mounted() {
-      // let data = await asyncDefault({
-      //   store: this.$store,
-      //   params: this.$route.params
-      // })
-      // Object.keys(data).forEach((key) => {
-      //   this[key] = data[key]
-      // })
-
-//      console.log(123123)
-//      setTimeout(() => {
-//        this.categoryType = 1
-//      }, 1000)
-//      console.log(this.$refs.sv)
-    },
-    //预请求
-//    asyncData({store, route, params}) {
-//      store.commit('setPageData', {
-//        key: 'level1',
-//        data: params.level1 || 0
-//      });
-//      store.commit('setPageData', {
-//        key: 'level2',
-//        data: params.level2 || 0
-//      });
-//      store.commit('setPageData', {
-//        key: 'key',
-//        data: params.key || ''
-//      });
-//
-//      //获取所有分类
-//      function getAllCategory() {
-//        return $http
-//          .post('/api/biji/get/note')
-//          .then(response => {
-//            let childObj = {};
-//            response.data.data.list.forEach(data => {
-//              data.checked = false;
-//              data.children.forEach(cData => {
-//                cData.checked = false;
-//              })
-//              childObj[data.id] = data.children;
-//            });
-//
-//
-//            store.commit('setApiData', {
-//              key: 'categoryChild',
-//              data: childObj
-//            })
-//            store.commit('setApiData', {
-//              key: 'category',
-//              data: response.data.data.list
-//            })
-//          })
-//          .catch(e => {
-//            console.log(e)
-//          })
-//      }
-//
-//      function searchNote() {
-//        let category = 'all';
-//        if (params.level1 == 0 && params.level2 == 0) {
-//          category = 'all'
-//        } else if (params.level1 != 0 && params.level2 == 0) {
-//          category = [params.level1].toString();
-//        } else {
-//          category = [params.level1, params.level2].toString();
-//        }
-//        return $http
-//          .post('/api/biji/search/note', {
-//            key: params.key,
-//            pageSize: 10,
-//            pageNum: 1,
-//            category: category
-//          })
-//          .then(response => {
-//            try {
-//              let data = response.data.data
-//              let reg = new RegExp(params.key, "gi");
-//              data.list.map((t) => {
-//                t.title = t.title.replace(reg, function (res, val, index) {
-//                  return `<span style="color: red">${res}</span>`
-//                })
-//              })
-//              store.commit('setApiData', {
-//                key: 'noteList',
-//                data: data
-//              })
-//            } catch (e) {
-//              store.commit('setApiData', {
-//                key: 'noteList',
-//                data: response.data.data
-//              })
-//            }
-//          })
-//          .catch(e => {
-//            console.log(e)
-//          })
-//      }
-//
-//      //获取最新笔记
-//      function getNewNode() {
-//        return $http
-//          .post('/api/biji/get/new/note', {
-//            len: 20
-//          })
-//          .then(response => {
-//            store.commit('setApiData', {
-//              key: 'newNote',
-//              data: response.data.data.list
-//            })
-//          })
-//          .catch(e => {
-//            console.log(e)
-//          })
-//      }
-//
-//      return Promise.all([getAllCategory(), searchNote(), getNewNode()])
-//    }
+      this.isLoading = false
+      window.onscroll = () => {
+        // 距离底部200px时加载一次
+        let bottomOfWindow = document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight <= 200
+        if (bottomOfWindow && this.isLoading === false && this.hasMore) {
+          this.isLoading = true
+          this.page++
+          setTimeout(() => {
+            this.searchData('push')
+          }, 500)
+        }
+      }
+    }
   }
 </script>
 <style>
@@ -489,6 +393,92 @@
   }
 </style>
 <style scoped lang="less">
+  .article-placeholder {
+    display: flex;
+    padding-top: 15px;
+    transition: all 0.3s;
+    .img {
+      width: 160px;
+      height: 90px;
+      box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
+      border-radius: 5px;
+      background-color: #eaeaea;
+    }
+    .content {
+      margin-left: 10px;
+      flex: 1;
+      .title {
+        height: 20px;
+        width: 300px;
+        background-color: #eaeaea;
+        margin-bottom: 12px;
+      }
+      .describe {
+        .text {
+          height: 16px;
+          background-color: #eaeaea;
+          margin-bottom: 8px;
+          &:first-child {
+            width: 100%;
+            animation: loading 1s ease-in-out infinite;
+          }
+          &:last-child {
+            width: 60%;
+            animation: loading 1s ease-in-out -.5s infinite;
+          }
+        }
+      }
+      .meta {
+        height: 14px;
+        background-color: #eaeaea;
+        width: 200px;
+      }
+    }
+  }
+  .article-empty {
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #999;
+    > i {
+      font-size: 26px;
+      margin-right: 10px;
+      color: #999;
+    }
+    > span {
+      padding-top: 5px;
+    }
+  }
+
+  @-webkit-keyframes loading {
+    0% {
+      width: 60%
+    }
+
+    50% {
+      width: 100%
+    }
+
+    to {
+      width: 60%
+    }
+  }
+
+  @keyframes loading {
+    0% {
+      width: 60%
+    }
+
+    50% {
+      width: 100%
+    }
+
+    to {
+      width: 60%
+    }
+  }
   .titlebar {
     height: 30px;
     font-size: 18px;
@@ -526,7 +516,7 @@
     padding-top: 46px;
   }
 
-  .notecontent {
+  .note-content {
     /*padding-bottom: 20px;*/
     position: relative;
     /*padding-right: 340px;*/

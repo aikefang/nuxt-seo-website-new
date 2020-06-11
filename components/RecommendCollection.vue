@@ -1,7 +1,7 @@
 <template>
     <div class="recommend-collection">
 <!--        <router-link :to="'category/'+item.parent+'/'+item._id" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">-->
-        <router-link :to="'category/'+item.parentId+'/'+item.id" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item.id">
+        <router-link :to="'category/' + item.parent.id + '/' +item.id + '/'" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">
             <!--<i class="iconfont icon-iconfonttag"></i>-->
             <div class="name">{{item.title}}</div>
         </router-link>

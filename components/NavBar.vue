@@ -82,14 +82,15 @@
         } else if (this.$route.name == 'doc' || this.$route.name == 'doc-id') {
           window.location.href = `/doc?search=${this.searchKey}`
         } else {
-          window.location.href = `/category/0/0/1/${this.searchKey}`
+          // window.location.href = `/category/${this.$route.params.level1 || 0}/${this.$route.params.level2 || 0}/1/${this.searchKey}`
+          window.location.href = `/category/?keyword=${this.searchKey}`
         }
       },
       changeNav(index) {
-        this.$store.dispatch('setState', {
-          key: 'navStatus',
-          value: index
-        })
+        // this.$store.dispatch('setState', {
+        //   key: 'navStatus',
+        //   value: index
+        // })
       },
       goLogin() {
         window.location.href = `/login/?url=${encodeURIComponent(window.location.pathname)}`
@@ -135,6 +136,7 @@
 //      }
     },
     mounted() {
+      // console.log(this.$route.params)
       function scrollTop() {
         return Math.max(
           //chrome

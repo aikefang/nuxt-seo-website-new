@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<div class="meta">
-					<router-link :to="'/category/'+item.levelFirst._id+'/'+item.levelSecond._id" class="collection-tag">
+					<router-link :to="'/category/'+item.levelFirst.seo+'/'+item.levelSecond.seo + '/'" class="collection-tag">
 						{{ item.levelSecond.title }}
 					</router-link>
 					<a class="num">
