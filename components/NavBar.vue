@@ -11,7 +11,7 @@
 						<div class="collapse">
 							<!--type 0: 相对链接（默认）1：绝对链接-->
 							<ul class="nav">
-								<li class="tab" :class="{'active': active === index}" @click="changeNav(index)"
+								<li class="tab" :class="{'active': active === item.urlLink}" @click="changeNav(index)"
 										v-for="(item, index) in global.navList" :key="item.id">
 									<template v-if="item.type === 0">
 										<router-link :to="item.urlLink">
@@ -100,12 +100,29 @@
       },
       inputBlur() {
         this.focus = false
-      }
+      },
+			getActive(status) {
+        switch (status) {
+          case 'index':
+            return '/';
+          case 'article':
+            return '/category/';
+          case 'book':
+            return '/book/';
+          case 'doc':
+            return '/doc/';
+					case 'json':
+            return 'http://json.webascii.cn/';
+					default:
+						return ''
+        }
+			}
     },
     computed: {
       ...mapState(['global', 'login']),
       active() {
-        return this.$store.state.navStatus
+        const status = this.global.navStatus
+        return this.getActive(status)
       },
       searchPlace() {
         if (this.$route.name == 'book' || this.$route.name == 'book-id') {

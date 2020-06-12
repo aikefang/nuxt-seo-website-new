@@ -43,6 +43,7 @@ module.exports = {
     '@/plugins/element-ui',
     '@/plugins/axios',
     '@/plugins/vue-filter',
+    '@/plugins/mixins',
   ],
   /*
   ** Nuxt.js dev-modules

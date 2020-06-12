@@ -1,32 +1,4 @@
 <template>
-	<!--  <div class="container">-->
-	<!--    <NavBar></NavBar>-->
-	<!--    <div>-->
-	<!--      <logo />-->
-	<!--      <h1 class="title">-->
-	<!--        nuxt-seo-website-->
-	<!--      </h1>-->
-	<!--      <h2 class="subtitle">-->
-	<!--        ssr note web-->
-	<!--      </h2>-->
-	<!--      <div class="links">-->
-	<!--        <a-->
-	<!--          href="https://nuxtjs.org/"-->
-	<!--          target="_blank"-->
-	<!--          class="button&#45;&#45;green"-->
-	<!--        >-->
-	<!--          Documentation-->
-	<!--        </a>-->
-	<!--        <a-->
-	<!--          href="https://github.com/nuxt/nuxt.js"-->
-	<!--          target="_blank"-->
-	<!--          class="button&#45;&#45;grey"-->
-	<!--        >-->
-	<!--          GitHub-->
-	<!--        </a>-->
-	<!--      </div>-->
-	<!--    </div>-->
-	<!--  </div>-->
 	<div>
 		<navBar></navBar>
 		<div class="collection">
@@ -48,6 +20,14 @@
 			</div>
 		</div>
 		<bottomFooter></bottomFooter>
+		<div class="flex-menu-right">
+			<ul>
+				<li class="jb-all bg-cb top no-number" @click="goTop">
+					<i class="iconfont icon-huidaodingbu"></i>
+					<span class="name">Top</span>
+				</li>
+			</ul>
+		</div>
 	</div>
 </template>
 
@@ -72,6 +52,7 @@
       CountDown,
     },
     async asyncData({store, route, params, redirect, $axios}) {
+      store.commit('global/setNavStatus', 'index')
       const [
         bannerList,
         recommendCategoryList,

@@ -527,4 +527,251 @@
       }
     }
   }
+
+
+  .flex-menu-left {
+    left: 50%;
+    width: 50px;
+    margin-left: -680px;
+    ul {
+      li {
+        &.edit-fast {
+          &.bg-cb {
+            &:before {
+              background: #dc143c;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 34px;
+            padding-top: 5px;
+          }
+        }
+        &.submit {
+          &.bg-cb {
+            &:before {
+              background: #dc143c;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 36px;
+            padding-top: 5px;
+          }
+        }
+        &.edit {
+          &.bg-cb {
+            &:before {
+              background: #0366d6;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 34px;
+            padding-top: 5px;
+          }
+        }
+        &.pinglun {
+          &.bg-cb {
+            &:before {
+              background: #ff8a00;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 36px;
+            padding-top: 5px;
+          }
+        }
+        &.zan {
+          &.bg-cb {
+            &:before {
+              background: #1abc9c;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 36px;
+            padding-top: 5px;
+          }
+        }
+      }
+    }
+    .nice-in {
+      -webkit-animation: niceIn 0.8s .2s ease;
+      -moz-animation: niceIn 0.8s .2s ease;
+      -o-animation: niceIn 0.8s .2s ease;
+      animation: niceIn 0.8s .2s ease;
+    }
+  }
+
+  .flex-menu-right {
+    left: 50%;
+    width: 50px;
+    margin-left: 610px;
+    ul {
+      li {
+        &.top {
+          &.bg-cb {
+            &:before {
+              background: #9266f9;
+            }
+            &:hover {
+              color: #FFFFFF;
+            }
+          }
+          i.iconfont {
+            font-size: 34px;
+            padding-top: 5px;
+          }
+        }
+      }
+    }
+  }
+
+  .flex-menu-left, .flex-menu-right {
+    display: flex;
+    position: fixed;
+    bottom: 100px;
+    color: #999;
+    user-select: none;
+    .no-number {
+      height: 75px;
+    }
+    ul {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      li {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 95px;
+        background: #f7f7f7;
+        cursor: pointer;
+        border-bottom: 1px #ececec solid;
+        a {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          width: 100%;
+          color: inherit;
+        }
+        &:last-child {
+          border-bottom: none;
+        }
+        .name {
+          font-size: 12px;
+          padding-top: 5px;
+        }
+        .number {
+          font-size: 12px;
+          padding-top: 8px;
+        }
+      }
+    }
+  }
+
+  @-webkit-keyframes niceIn {
+    0% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1)
+    }
+    50% {
+      opacity: 1;
+      -webkit-transform: scale(1.5);
+      transform: scale(1.5)
+    }
+    70% {
+      -webkit-transform: scale(.8);
+      transform: scale(.8)
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      transform: scale(1)
+    }
+  }
+
+  @keyframes niceIn {
+    0% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+      transform: scale(1)
+    }
+    50% {
+      opacity: 1;
+      -webkit-transform: scale(1.5);
+      -ms-transform: scale(1.5);
+      transform: scale(1.5)
+    }
+    70% {
+      -webkit-transform: scale(.8);
+      -ms-transform: scale(.8);
+      transform: scale(.8)
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+      transform: scale(1)
+    }
+  }
+
+  @-o-keyframes niceIn {
+    0% {
+      opacity: 1;
+      -o-transform: scale(1);
+      transform: scale(1)
+    }
+    50% {
+      opacity: 1;
+      -o-transform: scale(1.5);
+      transform: scale(1.5)
+    }
+    70% {
+      -o-transform: scale(.8);
+      transform: scale(.8)
+    }
+    100% {
+      opacity: 1;
+      -o-transform: scale(1);
+      transform: scale(1)
+    }
+  }
+
+  @-moz-keyframes niceIn {
+    0% {
+      opacity: 1;
+      -moz-transform: scale(1);
+      transform: scale(1)
+    }
+    50% {
+      opacity: 1;
+      -moz-transform: scale(1.5);
+      transform: scale(1.5)
+    }
+    70% {
+      -o-transform: scale(.8);
+      transform: scale(.8)
+    }
+    100% {
+      opacity: 1;
+      -moz-transform: scale(1);
+      transform: scale(1)
+    }
+  }
 </style>

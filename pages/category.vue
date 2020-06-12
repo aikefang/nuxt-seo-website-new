@@ -1,126 +1,134 @@
 <template>
-  <div>
-    <NavBar></NavBar>
-    <div class="content-main">
-      <div class="note-content">
-        <div class="column-left">
-          <div style="padding: 20px">
-            <h3 class="titlebar">笔记</h3>
-            <div class="cat-nav-area">
-              <dl class="cat-nav cat-bg cat-primarybright">
-                <dt>分类：</dt>
-                <dd>
-                  <div class="clear">
-<!--                    <router-link to="/" class="logo">-->
-                    <router-link
-                      :to="'/category/'"
-                      :class="{'selected':(!categoryType && !categoryChildType) || (categoryType === '0' && categoryChildType === '0')}"
-                      class="cur jb-all">
-                      全部
-                    </router-link>
+	<div>
+		<NavBar></NavBar>
+		<div class="content-main">
+			<div class="note-content">
+				<div class="column-left">
+					<div style="padding: 20px">
+						<h3 class="titlebar">笔记</h3>
+						<div class="cat-nav-area">
+							<dl class="cat-nav cat-bg cat-primarybright">
+								<dt>分类：</dt>
+								<dd>
+									<div class="clear">
+										<!--                    <router-link to="/" class="logo">-->
+										<router-link
+											:to="'/category/'"
+											:class="{'selected':(!categoryType && !categoryChildType) || (categoryType === '0' && categoryChildType === '0')}"
+											class="cur jb-all">
+											全部
+										</router-link>
 
-                    <router-link class="cur jb-all"
-                       v-for="item in category"
-                       :to="'/category/'+item.seo + '/'"
-                       :key="item._id"
-                       :class="{selected: item.seo === categoryType}">
-                      {{item.title}}
-                    </router-link>
-                  </div>
-                  <div style="display: block" class="category-children-box"
-                       v-for="item in category"
-                       :key="item._id"
-                       v-show="categoryType === item.seo">
-                    <router-link
-                      class="cur jb-all"
-                      :to="'/category/' + item.seo + '/' + cItem.seo + '/'"
-                      :key="cItem._id"
-                      v-for="cItem in item.children"
-                      :class="{selected: cItem.seo === categoryChildType}">
-                      {{cItem.title}}
-                    </router-link>
-                  </div>
-                </dd>
-              </dl>
-              <dl class="cat-nav cat-bg cat-primarybright">
-                <dt class="search-text">搜索：</dt>
-                <dd>
-                  <div class="search">
-                    <el-input id="searchInput" v-model="keyword" ref="sv"
-                              @keyup.enter.native="search" style="width: 500px">
-                      <el-button @click="search" slot="append" icon="search">搜索</el-button>
-                    </el-input>
-                  </div>
-                </dd>
-              </dl>
-            </div>
+										<router-link class="cur jb-all"
+																 v-for="item in category"
+																 :to="'/category/'+item.seo + '/'"
+																 :key="item._id"
+																 :class="{selected: item.seo === categoryType}">
+											{{item.title}}
+										</router-link>
+									</div>
+									<div style="display: block" class="category-children-box"
+											 v-for="item in category"
+											 :key="item._id"
+											 v-show="categoryType === item.seo">
+										<router-link
+											class="cur jb-all"
+											:to="'/category/' + item.seo + '/' + cItem.seo + '/'"
+											:key="cItem._id"
+											v-for="cItem in item.children"
+											:class="{selected: cItem.seo === categoryChildType}">
+											{{cItem.title}}
+										</router-link>
+									</div>
+								</dd>
+							</dl>
+							<dl class="cat-nav cat-bg cat-primarybright">
+								<dt class="search-text">搜索：</dt>
+								<dd>
+									<div class="search">
+										<el-input id="searchInput" v-model="keyword" ref="sv"
+															@keyup.enter.native="search" style="width: 500px">
+											<el-button @click="search" slot="append" icon="search">搜索</el-button>
+										</el-input>
+									</div>
+								</dd>
+							</dl>
+						</div>
 
-            <div class="note-category boxs">
-              <div class="article-empty" v-show="list.length <= 0">
-                <i class="iconfont icon-kong"></i>
-                <span>暂无相关笔记</span>
-              </div>
-              <div class="node-box"
-                   v-for="item in list" :key="item._id">
-                <a class="article-image-view" :href="'/article/' + item._id + '/'" target="_blank">
-                  <img :src="item.articleImageViewPc" alt="">
-                </a>
-                <div class="noteinfo">
-                  <h2 class="media-heading">
-                    <a
-                      :href="'/article/' + item._id + '/'"
-                      v-html="item.title"
-                      target="_blank"
-                      class="title tof cur jb-col blue"></a>
-                  </h2>
-                  <div class="media">
-                    <p class="media-body">
-                      {{item.articleDescribe || '作者很懒，什么都没有留下。。'}}
-                    </p>
-                  </div>
-                  <div class="media-info">
-                    <em class="ml0">浏览：</em>
-                    <span>{{item.views}}</span>
-                    <em>分类：</em>
-                    <span>
+						<div class="note-category boxs">
+							<div class="article-empty" v-show="list.length <= 0">
+								<i class="iconfont icon-kong"></i>
+								<span>暂无相关笔记</span>
+							</div>
+							<div class="node-box"
+									 v-for="item in list" :key="item._id">
+								<a class="article-image-view" :href="'/article/' + item._id + '/'" target="_blank">
+									<img :src="item.articleImageViewPc" alt="">
+								</a>
+								<div class="noteinfo">
+									<h2 class="media-heading">
+										<a
+											:href="'/article/' + item._id + '/'"
+											v-html="item.title"
+											target="_blank"
+											class="title tof cur jb-col blue"></a>
+									</h2>
+									<div class="media">
+										<p class="media-body">
+											{{item.articleDescribe || '作者很懒，什么都没有留下。。'}}
+										</p>
+									</div>
+									<div class="media-info">
+										<em class="ml0">浏览：</em>
+										<span>{{item.views}}</span>
+										<em>分类：</em>
+										<span>
                         <a
-                          :href="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'"
-                          class="cur jb-all">
+													:href="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'"
+													class="cur jb-all">
                             {{item.levelSecond.title}}
                         </a>
                     </span>
-                    <em>作者：</em>
-                    <span>
+										<em>作者：</em>
+										<span>
                         <a href="javascript:;" class="author_name tof author_link jb-all">
                             {{item.author.nickname}}
                         </a>
                     </span>
-                  </div>
-                </div>
-              </div>
-              <div class="article-placeholder" v-show="isLoading && hasMore">
-                <div class="img"></div>
-                <div class="content">
-                  <div class="title"></div>
-                  <div class="describe">
-                    <div class="text"></div>
-                    <div class="text"></div>
-                  </div>
-                  <div class="meta"></div>
-                </div>
-              </div>
-              <div class="article-empty" v-show="!isLoading && !hasMore && list.length > 0">
-                <i class="iconfont icon-kong"></i>
-                <span>暂无更多~</span>
-              </div>
-            </div>
+									</div>
+								</div>
+							</div>
+							<div class="article-placeholder" v-show="isLoading && hasMore">
+								<div class="img"></div>
+								<div class="content">
+									<div class="title"></div>
+									<div class="describe">
+										<div class="text"></div>
+										<div class="text"></div>
+									</div>
+									<div class="meta"></div>
+								</div>
+							</div>
+							<div class="article-empty" v-show="!isLoading && !hasMore && list.length > 0">
+								<i class="iconfont icon-kong"></i>
+								<span>暂无更多~</span>
+							</div>
+						</div>
 
-          </div>
-        </div>
-      </div>
-    </div>
-    <BottomFooter></BottomFooter>
-  </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="flex-menu-right">
+			<ul>
+				<li class="jb-all bg-cb top no-number" @click="goTop">
+					<i class="iconfont icon-huidaodingbu"></i>
+					<span class="name">Top</span>
+				</li>
+			</ul>
+		</div>
+		<BottomFooter></BottomFooter>
+	</div>
 </template>
 
 <script>
@@ -130,7 +138,7 @@
 
 
   const noteSearchFn = async ({keyword, page, category, params, $axios}) => {
-    const firstId  = category.find(data => {
+    const firstId = category.find(data => {
       if (data.seo === params.level1) {
         return true
       }
@@ -202,6 +210,7 @@
           redirect(pathArr.join('/'))
         }
       }
+      store.commit('global/setNavStatus', 'article')
 
 
       const categoryRes = await $axios.get(`/api/biji/category/list`, {
@@ -248,7 +257,7 @@
       }
     },
     watch: {
-      async '$route'(to, from){
+      async '$route'(to, from) {
         if (to.params.level1) {
           this.categoryType = to.params.level1
         }
@@ -312,9 +321,7 @@
         this.searchData()
       },
     },
-    computed: {
-
-    },
+    computed: {},
     methods: {
       async searchData(type) {
         const that = this
@@ -389,538 +396,587 @@
   }
 </script>
 <style>
-  body {
-    min-width: 1100px;
-  }
+	body {
+		min-width: 1100px;
+	}
 </style>
 <style scoped lang="less">
-  .article-placeholder {
-    display: flex;
-    padding-top: 15px;
-    transition: all 0.3s;
-    .img {
-      width: 160px;
-      height: 90px;
-      box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
-      border-radius: 5px;
-      background-color: #eaeaea;
-    }
-    .content {
-      margin-left: 10px;
-      flex: 1;
-      .title {
-        height: 20px;
-        width: 300px;
-        background-color: #eaeaea;
-        margin-bottom: 12px;
-      }
-      .describe {
-        .text {
-          height: 16px;
-          background-color: #eaeaea;
-          margin-bottom: 8px;
-          &:first-child {
-            width: 100%;
-            animation: loading 1s ease-in-out infinite;
-          }
-          &:last-child {
-            width: 60%;
-            animation: loading 1s ease-in-out -.5s infinite;
-          }
-        }
-      }
-      .meta {
-        height: 14px;
-        background-color: #eaeaea;
-        width: 200px;
-      }
-    }
-  }
-  .article-empty {
-    height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 16px;
-    color: #999;
-    > i {
-      font-size: 26px;
-      margin-right: 10px;
-      color: #999;
-    }
-    > span {
-      padding-top: 5px;
-    }
-  }
+	.article-placeholder {
+		display: flex;
+		padding-top: 15px;
+		transition: all 0.3s;
 
-  @-webkit-keyframes loading {
-    0% {
-      width: 60%
-    }
+		.img {
+			width: 160px;
+			height: 90px;
+			box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
+			border-radius: 5px;
+			background-color: #eaeaea;
+		}
 
-    50% {
-      width: 100%
-    }
+		.content {
+			margin-left: 10px;
+			flex: 1;
 
-    to {
-      width: 60%
-    }
-  }
+			.title {
+				height: 20px;
+				width: 300px;
+				background-color: #eaeaea;
+				margin-bottom: 12px;
+			}
 
-  @keyframes loading {
-    0% {
-      width: 60%
-    }
+			.describe {
+				.text {
+					height: 16px;
+					background-color: #eaeaea;
+					margin-bottom: 8px;
 
-    50% {
-      width: 100%
-    }
+					&:first-child {
+						width: 100%;
+						animation: loading 1s ease-in-out infinite;
+					}
 
-    to {
-      width: 60%
-    }
-  }
-  .titlebar {
-    height: 30px;
-    font-size: 18px;
-    line-height: 30px;
-    font-weight: 700;
-    text-indent: 10px;
-    position: relative;
-    color: #333;
-    margin-bottom: 16px;
-    &:before {
-      top: 5px;
-      width: 5px;
-      height: 20px;
-      background: #3498db;
-      position: absolute;
-      display: block;
-      left: 0;
-      content: '';
-    }
-    &:after {
-      top: 36px;
-      width: 100%;
-      border-top: 1px #ececec solid;
-      display: block;
-      left: 0;
-      content: '';
-      position: absolute;
-    }
-  }
+					&:last-child {
+						width: 60%;
+						animation: loading 1s ease-in-out -.5s infinite;
+					}
+				}
+			}
 
-  .content-main {
-    min-width: 1000px;
-    width: 1200px;
-    margin: 0 auto;
-    padding-top: 46px;
-  }
+			.meta {
+				height: 14px;
+				background-color: #eaeaea;
+				width: 200px;
+			}
+		}
+	}
 
-  .note-content {
-    /*padding-bottom: 20px;*/
-    position: relative;
-    /*padding-right: 340px;*/
-    width: inherit !important;
-    overflow: hidden;
-    /*min-width: 710px;*/
-    background-color: #fafafa;
-  }
+	.article-empty {
+		height: 80px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 16px;
+		color: #999;
 
-  .column-left {
-    width: 100%;
-    min-width: 700px;
-    float: left;
-    background-color: #ffffff;
-    .cat-nav-area {
-      padding: 10px 15px 0px;
-      border-radius: 5px;
-      background: #f4f5f7;
-      position: relative;
-      margin-bottom: 10px;
-      dd {
-        margin: 0;
-      }
-      /*&:before {*/
-        /*right: 0;*/
-        /*bottom: -20px;*/
-        /*left: 0;*/
-        /*height: 0;*/
-        /*font-size: 0;*/
-        /*border-top: 1px #dfdfdf dashed;*/
-        /*content: '';*/
-        /*position: absolute;*/
-      /*}*/
-    }
-  }
+		> i {
+			font-size: 26px;
+			margin-right: 10px;
+			color: #999;
+		}
 
-  .cat-nav {
-    /*margin-bottom: 0;*/
-    padding: 0 0 0 50px;
-    overflow: hidden;
-    position: relative;
-    margin: 0;
-    dt {
-      top: 0;
-      left: 0;
-      height: 20px;
-      line-height: 20px;
-      font-weight: normal;
-      color: #999;
-      position: absolute;
-      &.search-text {
-        padding-top: 8px !important;
-      }
-    }
-    dd {
-      display: inline-block;
-      max-height: 120px;
-      min-height: 20px;
-      line-height: 20px;
-      overflow-x: hidden;
-      overflow-y: auto;
-    }
-    &.cat-bg {
-      &.cat-primarybright {
-        .category-children-box {
-          margin-left: 48px;
-          padding-bottom: 10px;
-          .category-children {
-            margin-right: 10px;
-          }
-        }
-        dd {
-          a.selected {
-            color: #fff !important;
-            background-color: #3498db;
-          }
-          a.selected, .cat-nav.cat-bg.cat-primarybright {
-            dd {
-              a:hover {
-                border: 1px #3498db solid;
-                color: #3498db;
-              }
-            }
-          }
-        }
-      }
-      dt {
-        padding: 2px 0;
-        height: 30px;
-        line-height: 26px;
-      }
-    }
+		> span {
+			padding-top: 5px;
+		}
+	}
 
-  }
+	@-webkit-keyframes loading {
+		0% {
+			width: 60%
+		}
+
+		50% {
+			width: 100%
+		}
+
+		to {
+			width: 60%
+		}
+	}
+
+	@keyframes loading {
+		0% {
+			width: 60%
+		}
+
+		50% {
+			width: 100%
+		}
+
+		to {
+			width: 60%
+		}
+	}
+
+	.titlebar {
+		height: 30px;
+		font-size: 18px;
+		line-height: 30px;
+		font-weight: 700;
+		text-indent: 10px;
+		position: relative;
+		color: #333;
+		margin-bottom: 16px;
+
+		&:before {
+			top: 5px;
+			width: 5px;
+			height: 20px;
+			background: #3498db;
+			position: absolute;
+			display: block;
+			left: 0;
+			content: '';
+		}
+
+		&:after {
+			top: 36px;
+			width: 100%;
+			border-top: 1px #ececec solid;
+			display: block;
+			left: 0;
+			content: '';
+			position: absolute;
+		}
+	}
+
+	.content-main {
+		min-width: 1000px;
+		width: 1200px;
+		margin: 0 auto;
+		padding-top: 46px;
+	}
+
+	.note-content {
+		/*padding-bottom: 20px;*/
+		position: relative;
+		/*padding-right: 340px;*/
+		width: inherit !important;
+		overflow: hidden;
+		/*min-width: 710px;*/
+		background-color: #fafafa;
+	}
+
+	.column-left {
+		width: 100%;
+		min-width: 700px;
+		float: left;
+		background-color: #ffffff;
+
+		.cat-nav-area {
+			padding: 10px 15px 0px;
+			border-radius: 5px;
+			background: #f4f5f7;
+			position: relative;
+			margin-bottom: 10px;
+
+			dd {
+				margin: 0;
+			}
+
+			/*&:before {*/
+			/*right: 0;*/
+			/*bottom: -20px;*/
+			/*left: 0;*/
+			/*height: 0;*/
+			/*font-size: 0;*/
+			/*border-top: 1px #dfdfdf dashed;*/
+			/*content: '';*/
+			/*position: absolute;*/
+			/*}*/
+		}
+	}
+
+	.cat-nav {
+		/*margin-bottom: 0;*/
+		padding: 0 0 0 50px;
+		overflow: hidden;
+		position: relative;
+		margin: 0;
+
+		dt {
+			top: 0;
+			left: 0;
+			height: 20px;
+			line-height: 20px;
+			font-weight: normal;
+			color: #999;
+			position: absolute;
+
+			&.search-text {
+				padding-top: 8px !important;
+			}
+		}
+
+		dd {
+			display: inline-block;
+			max-height: 120px;
+			min-height: 20px;
+			line-height: 20px;
+			overflow-x: hidden;
+			overflow-y: auto;
+		}
+
+		&.cat-bg {
+			&.cat-primarybright {
+				.category-children-box {
+					margin-left: 48px;
+					padding-bottom: 10px;
+
+					.category-children {
+						margin-right: 10px;
+					}
+				}
+
+				dd {
+					a.selected {
+						color: #fff !important;
+						background-color: #3498db;
+					}
+
+					a.selected, .cat-nav.cat-bg.cat-primarybright {
+						dd {
+							a:hover {
+								border: 1px #3498db solid;
+								color: #3498db;
+							}
+						}
+					}
+				}
+			}
+
+			dt {
+				padding: 2px 0;
+				height: 30px;
+				line-height: 26px;
+			}
+		}
+
+	}
 
 
-  .cat-nav.cat-bg {
-    dd {
-      a {
-        display: block;
-        height: 30px;
-        line-height: 26px;
-        border: 1px transparent solid;
-        border-radius: 3px;
-        text-decoration: none;
-      }
-    }
-  }
+	.cat-nav.cat-bg {
+		dd {
+			a {
+				display: block;
+				height: 30px;
+				line-height: 26px;
+				border: 1px transparent solid;
+				border-radius: 3px;
+				text-decoration: none;
+			}
+		}
+	}
 
-  .cat-nav {
-    dd {
-      a {
-        margin: 0 0 5px 5px;
-        padding: 0 6px;
-        float: left;
-        color: #333;
-      }
-    }
-  }
+	.cat-nav {
+		dd {
+			a {
+				margin: 0 0 5px 5px;
+				padding: 0 6px;
+				float: left;
+				color: #333;
+			}
+		}
+	}
 
-  .cat-nav-area .cat-nav dt, .cat-nav-area .cat-nav dd a {
-    font-size: 14px;
-    /*font-weight: 300;*/
-  }
+	.cat-nav-area .cat-nav dt, .cat-nav-area .cat-nav dd a {
+		font-size: 14px;
+		/*font-weight: 300;*/
+	}
 
-  .cat-nav-area .cat-nav dd a {
-    color: #666;
-  }
+	.cat-nav-area .cat-nav dd a {
+		color: #666;
+	}
 
-  .noteinfo {
-    //padding-left: 70px;
-    position: relative;
-  }
+	.noteinfo {
+		//padding-left: 70px;
+		position: relative;
+	}
 
-  .noteinfo a.avatar, .noteinfo a.avatar img {
-    display: block;
-    width: 60px;
-    height: 60px;
-    border-radius: 100%;
-    padding-left: 0;
-    top: 0;
-    left: 0;
-    position: absolute;
-  }
+	.noteinfo a.avatar, .noteinfo a.avatar img {
+		display: block;
+		width: 60px;
+		height: 60px;
+		border-radius: 100%;
+		padding-left: 0;
+		top: 0;
+		left: 0;
+		position: absolute;
+	}
 
-  .noteinfo {
-    .media-heading {
-      height: 20px;
-      line-height: 20px;
-      font-size: 18px;
-      overflow: hidden;
-      margin-bottom: 5px;
-      margin-top: 20px;
-      > * {
-        vertical-align: middle;
-      }
-      > span {
-        padding: 0 5px;
-      }
-      a {
-        font-weight: 700;
-        color: #333;
-        display: inline-block;
-        height: 20px;
-      }
-      .title {
-        width: 1100px;
-        max-width: 1100px;
-        overflow: hidden;
-      }
-      .splitline {
-        display: inline-block;
-        margin: 0 4px;
-        font-size: 12px;
-        color: #ccc;
-      }
-    }
-    .media-info {
-      margin: 8px 0;
-      /*padding: 0 8px;*/
-      line-height: 30px;
-      border-radius: 4px;
-      /*background: #f4f5f7;*/
-      color: #ababab;
-      overflow: hidden;
-      font-size: 12px;
-      a.author-link {
-        font-size: 14px;
-      }
-      a.author-name {
-        max-width: 60px;
-      }
-    }
-  }
+	.noteinfo {
+		.media-heading {
+			height: 20px;
+			line-height: 20px;
+			font-size: 18px;
+			overflow: hidden;
+			margin-bottom: 5px;
+			margin-top: 20px;
 
-  a.link_blue {
-    color: #3498db !important;
-  }
+			> * {
+				vertical-align: middle;
+			}
 
-  .ml0 {
-    margin-left: 0 !important;
-  }
+			> span {
+				padding: 0 5px;
+			}
 
-  .node-box {
-    display: flex;
-    /*margin-bottom: 20px;*/
-    position: relative;
-    border-bottom: 1px #dfdfdf dashed;
-    /*padding-bottom: 20px;*/
-    /*display: block;*/
-    em {
-      font-style: normal;
-    }
-    .article-image-view {
-      display: flex;
-      margin-top: 20px;
-      margin-right: 10px;
-      img {
-        height: 90px;
-        width: 160px;
-        box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
-        border-radius: 5px;
-      }
-    }
-  }
+			a {
+				font-weight: 700;
+				color: #333;
+				display: inline-block;
+				height: 20px;
+			}
 
-  .noteinfo {
-    .media-info {
-      em {
-        float: left;
-        color: #ababab;
-        /*font-style: normal;*/
-        margin-left: 30px;
-      }
-      > span {
-        float: left;
-      }
-      a {
-        color: #bdc3c7;
-        text-decoration: none;
-      }
-      a:hover {
-        color: #3498db;
-        text-decoration: underline;
-      }
-    }
-  }
+			.title {
+				width: 1100px;
+				max-width: 1100px;
+				overflow: hidden;
+			}
 
-  .media {
-    margin-top: 10px;
-    overflow: hidden;
-    zoom: 1;
-    .media-body {
-      margin: 0;
-      color: #999;
-      line-height: 24px;
-      word-break: break-all;
-      width: 100%;
-      display: table-cell;
-      vertical-align: top;
-      overflow: hidden;
-      zoom: 1;
-      font-size: 14px;
-      /*font-weight: 300;*/
-    }
-  }
+			.splitline {
+				display: inline-block;
+				margin: 0 4px;
+				font-size: 12px;
+				color: #ccc;
+			}
+		}
 
-  .nav {
-    margin-bottom: 0;
-  }
+		.media-info {
+			margin: 8px 0;
+			/*padding: 0 8px;*/
+			line-height: 30px;
+			border-radius: 4px;
+			/*background: #f4f5f7;*/
+			color: #ababab;
+			overflow: hidden;
+			font-size: 12px;
 
-  .column-right {
-    padding-top: 20px;
-    margin-right: -320px !important;
-    width: 300px !important;
-    float: right !important;
-    word-wrap: break-word;
-  }
+			a.author-link {
+				font-size: 14px;
+			}
 
-  .more {
-    color: #ccc;
-    font-size: 14px;
-  }
+			a.author-name {
+				max-width: 60px;
+			}
+		}
+	}
 
-  .publish {
-    margin: 0 0 10px;
-    padding: 12px;
-    width: 275px;
-    font-size: 18px;
-    outline: 0 none !important;
-    color: #fff;
-    background-color: #0275d8;
-    /*border-color: #0275d8;*/
-    display: inline-block;
-    /*padding: 6px 12px;*/
-    margin-bottom: 0;
-    /*font-size: 14px;*/
-    font-weight: normal;
-    /*line-height: 1.42857143;*/
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: middle;
-    /*-ms-touch-action: manipulation;*/
-    touch-action: manipulation;
-    cursor: pointer;
-    /*-webkit-user-select: none;*/
-    /*-moz-user-select: none;*/
-    /*-ms-user-select: none;*/
-    user-select: none;
-    /*background-image: none;*/
-    border: 1px solid transparent;
-    border-radius: 4px;
-  }
+	a.link_blue {
+		color: #3498db !important;
+	}
 
-  .search {
-    margin-bottom: 10px;
-    margin-left: 10px;
-    .el-input {
-      height: 32px;
-      max-width: 500px;
-      input {
-        height: 32px;
-        max-width: 500px;
-      }
-    }
-  }
+	.ml0 {
+		margin-left: 0 !important;
+	}
 
-  .toprank_orange {
-    i {
-      color: #f60;
-      border-color: #f60;
-    }
-  }
+	.node-box {
+		display: flex;
+		/*margin-bottom: 20px;*/
+		position: relative;
+		border-bottom: 1px #dfdfdf dashed;
+		/*padding-bottom: 20px;*/
+		/*display: block;*/
 
-  .article_num {
-    margin: 0 0 10px;
-    width: 100%;
-    overflow: hidden;
-    li.toprank_orange {
-      i {
-        color: #f60;
-        border-color: #f60;
-      }
-    }
-    li {
-      padding: 0;
-      overflow: hidden;
-      a {
-        font-size: 16px;
-        display: inline-block;
-        padding-left: 25px;
-        height: 30px;
-        line-height: 30px;
-        overflow: hidden;
-        position: relative;
-        color: #333;
-        width: 300px;
-        text-decoration: none;
-        i {
-          display: block;
-          top: 5px;
-          left: 0;
-          width: 18px;
-          height: 19px;
-          line-height: 19px;
-          font-style: normal;
-          color: #aab2bd;
-          text-align: center;
-          font-size: 12px;
-          border: 1px solid #aab2bd;
-          border-radius: 100%;
-          position: absolute;
-        }
-        -webkit-transition: color 0.2s linear;
-        -moz-transition: color 0.2s linear;
-        -o-transition: color 0.2s linear;
-        transition: color 0.2s linear;
-        .col-3498db:hover {
-          color: #3498db;
-          text-decoration: underline;
-        }
-      }
-      //a:hover {
-      //  i {
-      //    color: #3498db;
-      //    border-color: #3498db;
-      //  }
-      //}
-    }
-    li.toprank_blue {
-      a {
-        i {
-          color: #3498db;
-          border-color: #3498db;
-        }
-      }
-    }
-  }
+		em {
+			font-style: normal;
+		}
 
-  .note-category {
-    .pagination {
-      display: flex;
-      justify-content: center;
-    }
-  }
+		.article-image-view {
+			display: flex;
+			margin-top: 20px;
+			margin-right: 10px;
+
+			img {
+				height: 90px;
+				width: 160px;
+				box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
+				border-radius: 5px;
+			}
+		}
+	}
+
+	.noteinfo {
+		.media-info {
+			em {
+				float: left;
+				color: #ababab;
+				/*font-style: normal;*/
+				margin-left: 30px;
+			}
+
+			> span {
+				float: left;
+			}
+
+			a {
+				color: #bdc3c7;
+				text-decoration: none;
+			}
+
+			a:hover {
+				color: #3498db;
+				text-decoration: underline;
+			}
+		}
+	}
+
+	.media {
+		margin-top: 10px;
+		overflow: hidden;
+		zoom: 1;
+
+		.media-body {
+			margin: 0;
+			color: #999;
+			line-height: 24px;
+			word-break: break-all;
+			width: 100%;
+			display: table-cell;
+			vertical-align: top;
+			overflow: hidden;
+			zoom: 1;
+			font-size: 14px;
+			/*font-weight: 300;*/
+		}
+	}
+
+	.nav {
+		margin-bottom: 0;
+	}
+
+	.column-right {
+		padding-top: 20px;
+		margin-right: -320px !important;
+		width: 300px !important;
+		float: right !important;
+		word-wrap: break-word;
+	}
+
+	.more {
+		color: #ccc;
+		font-size: 14px;
+	}
+
+	.publish {
+		margin: 0 0 10px;
+		padding: 12px;
+		width: 275px;
+		font-size: 18px;
+		outline: 0 none !important;
+		color: #fff;
+		background-color: #0275d8;
+		/*border-color: #0275d8;*/
+		display: inline-block;
+		/*padding: 6px 12px;*/
+		margin-bottom: 0;
+		/*font-size: 14px;*/
+		font-weight: normal;
+		/*line-height: 1.42857143;*/
+		text-align: center;
+		white-space: nowrap;
+		vertical-align: middle;
+		/*-ms-touch-action: manipulation;*/
+		touch-action: manipulation;
+		cursor: pointer;
+		/*-webkit-user-select: none;*/
+		/*-moz-user-select: none;*/
+		/*-ms-user-select: none;*/
+		user-select: none;
+		/*background-image: none;*/
+		border: 1px solid transparent;
+		border-radius: 4px;
+	}
+
+	.search {
+		margin-bottom: 10px;
+		margin-left: 10px;
+
+		.el-input {
+			height: 32px;
+			max-width: 500px;
+
+			input {
+				height: 32px;
+				max-width: 500px;
+			}
+		}
+	}
+
+	.toprank_orange {
+		i {
+			color: #f60;
+			border-color: #f60;
+		}
+	}
+
+	.article_num {
+		margin: 0 0 10px;
+		width: 100%;
+		overflow: hidden;
+
+		li.toprank_orange {
+			i {
+				color: #f60;
+				border-color: #f60;
+			}
+		}
+
+		li {
+			padding: 0;
+			overflow: hidden;
+
+			a {
+				font-size: 16px;
+				display: inline-block;
+				padding-left: 25px;
+				height: 30px;
+				line-height: 30px;
+				overflow: hidden;
+				position: relative;
+				color: #333;
+				width: 300px;
+				text-decoration: none;
+
+				i {
+					display: block;
+					top: 5px;
+					left: 0;
+					width: 18px;
+					height: 19px;
+					line-height: 19px;
+					font-style: normal;
+					color: #aab2bd;
+					text-align: center;
+					font-size: 12px;
+					border: 1px solid #aab2bd;
+					border-radius: 100%;
+					position: absolute;
+				}
+
+				-webkit-transition: color 0.2s linear;
+				-moz-transition: color 0.2s linear;
+				-o-transition: color 0.2s linear;
+				transition: color 0.2s linear;
+
+				.col-3498db:hover {
+					color: #3498db;
+					text-decoration: underline;
+				}
+			}
+
+			//a:hover {
+			//  i {
+			//    color: #3498db;
+			//    border-color: #3498db;
+			//  }
+			//}
+		}
+
+		li.toprank_blue {
+			a {
+				i {
+					color: #3498db;
+					border-color: #3498db;
+				}
+			}
+		}
+	}
+
+	.note-category {
+		.pagination {
+			display: flex;
+			justify-content: center;
+		}
+	}
 </style>
