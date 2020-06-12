@@ -4,7 +4,7 @@
 		<div class="book-page">
 			<ul>
 				<li v-for="item in bookList" :key="item._id" class="jb-all">
-					<router-link :to="'/book/' + item.id">
+					<router-link :to="'/book/' + item._id + '/'">
 						<!--<el-tooltip class="item" effect="dark" content="点击下载PDF" placement="right">-->
 						<div class="book-content">
 							<img class="book-img"

@@ -1,10 +1,12 @@
 import $axios from '@nuxtjs/axios'
-const state = {
-  articleList: [],
-  pageSize: 20,
-  pageNum: 1,
-  loading: false,
-  more: true
+const state = () => {
+  return {
+    articleList: [],
+    pageSize: 20,
+    pageNum: 1,
+    loading: false,
+    more: true
+  }
 }
 
 const mutations = {

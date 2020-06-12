@@ -1,5 +1,7 @@
-const state = {
-  status: false
+const state = () => {
+  return {
+    status: false
+  }
 }
 
 const mutations = {

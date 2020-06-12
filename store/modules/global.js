@@ -1,9 +1,11 @@
-const state = {
-  bannerList: [],
-  navList: [],
-  recommendCategoryList: [],
-  userInfo: {},
-  navStatus: 'index',
+const state = () => {
+  return {
+    bannerList: [],
+    navList: [],
+    recommendCategoryList: [],
+    userInfo: {},
+    navStatus: 'index',
+  }
 }
 
 const mutations = {
