@@ -62,7 +62,7 @@
               </div>
               <div class="node-box"
                    v-for="item in list" :key="item._id">
-                <a class="article-image-view" :href="'/article/' + item._id + '/'">
+                <a class="article-image-view" :href="'/article/' + item._id + '/'" target="_blank">
                   <img :src="item.articleImageViewPc" alt="">
                 </a>
                 <div class="noteinfo">
@@ -70,6 +70,7 @@
                     <a
                       :href="'/article/' + item._id + '/'"
                       v-html="item.title"
+                      target="_blank"
                       class="title tof cur jb-col blue"></a>
                   </h2>
                   <div class="media">

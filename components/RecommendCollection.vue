@@ -1,11 +1,11 @@
 <template>
     <div class="recommend-collection">
 <!--        <router-link :to="'category/'+item.parent+'/'+item._id" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">-->
-        <router-link :to="'category/' + item.parent.id + '/' +item.id + '/'" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">
+        <router-link :to="'category/' + item.parent.seo + '/' +item.seo + '/'" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">
             <!--<i class="iconfont icon-iconfonttag"></i>-->
             <div class="name">{{item.title}}</div>
         </router-link>
-        <router-link :to="'category'" class="kid jb-all more">
+        <router-link :to="'category/'" class="kid jb-all more">
             <div class="name">More</div>
         </router-link>
     </div>

@@ -2,11 +2,11 @@
 	<div class="list-container">
 		<ul class="note-list">
 			<li v-for="item in article.articleList" :key="item.id" :class="{'have-img' : !!item.articleImageView != false}">
-				<a :href="'/article/'+item._id" class="wrap-img" v-if="!!item.articleImageView != false">
+				<a :href="'/article/' + item._id + '/'" class="wrap-img" v-if="!!item.articleImageView != false">
 					<img :src="item.articleImageView2" alt="" class="img-blur-done">
 				</a>
 				<div class="content">
-					<a :href="'/article/'+item._id" class="title tof">{{item.title}}</a>
+					<a :href="'/article/' + item._id + '/'" class="title tof">{{item.title}}</a>
 					<!--<div class="author">-->
 					<!--<a class="avatar">-->
 					<!--<img :src="item.headImg" alt="">-->
@@ -22,7 +22,7 @@
 					</div>
 				</div>
 				<div class="meta">
-					<router-link :to="'/category/'+item.levelFirst.seo+'/'+item.levelSecond.seo + '/'" class="collection-tag">
+					<router-link :to="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'" class="collection-tag">
 						{{ item.levelSecond.title }}
 					</router-link>
 					<a class="num">
