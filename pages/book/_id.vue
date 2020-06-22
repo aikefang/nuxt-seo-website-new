@@ -4,7 +4,7 @@
         <div class="book-header">
             <div class="book-info-box">
                 <div class="book-img">
-                    <img :src="bookDetail.bookImg" alt="">
+                    <img :src="bookDetail.bookImg + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80'" alt="">
                 </div>
                 <h1 class="book-title">{{bookDetail.bookName}}</h1>
                 <ul class="book-meta">

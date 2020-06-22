@@ -3,7 +3,8 @@
   <div class="more-sign">
     <h6>社交帐号登录</h6>
     <div class="sign-list">
-      <a href="https://github.com/login/oauth/authorize?client_id=552b7d172a0576884f9a" class="github-icon iconfont icon-GitHub"></a>
+<!--      <a href="https://github.com/login/oauth/authorize?client_id=552b7d172a0576884f9a" class="github-icon iconfont icon-GitHub"></a>-->
+      <a href="https://github.com/login/oauth/authorize?client_id=8d34af5479edcb806db0" class="github-icon iconfont icon-GitHub"></a>
       <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101570897&redirect_uri=https://www.webascii.cn/auth/login/qq/callback&state=webascii" class="qq-icon iconfont icon-qq"></a>
     </div>
   </div>
