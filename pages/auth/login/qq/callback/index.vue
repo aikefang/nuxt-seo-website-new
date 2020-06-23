@@ -72,55 +72,26 @@
 </template>
 
 <script>
-  // import md5 from 'js-md5';
   import { Md5 } from 'ts-md5/dist/md5'
 
   export default {
     name: 'qqLogin',
     async asyncData({store, route, params, redirect}) {
-      let qqUserInfo = await store.dispatch('qqUserInfo', {
-        code: route.query.code
+      let qqUserInfo = await $axios.get('/api/auth/qq/user/userInfo', {
+        params: {
+          code: route.query.code
+        }
       })
-
-      if (qqUserInfo.status != 200) {
+      if (qqUserInfo.status !== 200) {
         redirect(`/login`)
-//        return {
-//          hasLogin: false,
-//          qq: {}
-//        }
       } else {
-        let hasLogin = qqUserInfo.data.hasLogin
-        let userInfo = qqUserInfo.data.qq
         return {
-          hasLogin,
-          qq: userInfo
+          github: qqUserInfo.data.qq,
+          id: qqUserInfo.data.id
         }
       }
     },
     data() {
-      // 验证旧用户
-      let validateOldAccount = async (rule, value, callback) => {
-        let checkRegister = await this.$store.dispatch('checkRegister', {
-          account: value
-        })
-        if (checkRegister.data.hasUser === false) {
-          callback(new Error('此账号不存在'))
-        } else {
-          callback()
-        }
-      }
-      // 验证新用户
-      let validateNewAccount = async (rule, value, callback) => {
-        let checkRegister = await this.$store.dispatch('checkRegister', {
-          account: value
-        })
-        if (checkRegister.data.hasUser === false) {
-          callback()
-
-        } else {
-          callback(new Error('此账号已被注册'))
-        }
-      }
       return {
         activeName: 'first',
         oldAccountForm: {
@@ -131,7 +102,7 @@
           account: [
             {required: true, message: '请输入账号', trigger: 'blur'},
             {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'},
-            {validator: validateOldAccount, trigger: 'blur'}
+            // {validator: validateOldAccount, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
@@ -146,7 +117,7 @@
           account: [
             {required: true, message: '请输入账号', trigger: 'blur'},
             {min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur'},
-            {validator: validateNewAccount, trigger: 'blur'}
+            // {validator: validateNewAccount, trigger: 'blur'}
           ],
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'},
@@ -156,50 +127,43 @@
       }
     },
     methods: {
-      /**
-       * 绑定用户
-       * @param type
-       * new：新用户
-       * old：旧用户
-       */
-      async bindUser(type) {
-        let account = {}
-        if (type == 'old') {
-          account = {
-            account: this.oldAccountForm.account,
-            password: Md5.hashStr(this.oldAccountForm.password).toString()
-          }
-        } else if (type == 'new') {
-          account = {
-            account: this.autoAccountForm.account,
-            password: Md5.hashStr(this.autoAccountForm.password).toString()
-          }
+      async bindNewUser() {
+        const account = {
+          account: this.autoAccountForm.account,
+          password: Md5.hashStr(this.autoAccountForm.password).toString()
         }
-        let param = {
-          ...this.qq,
+        const res = await this.$axios.post(`/api/auth/bind/qq/new/user`, {
           ...account,
-          bindType: type
+          id: this.id
+        })
+        if (res.status !== 200) {
+          return this.$message.error(res.message)
         }
-
-        // let bindDate = await this.$store.dispatch('bindQqUser', param)
-        // if (bindDate.status != 200) {
-        //   this.$message.error(bindDate.error)
-        // } else {
-        //   this.$cookie.set('loginToken', bindDate.data.user.loginToken)
-        //   this.$cookie.set('userId', bindDate.data.user.id)
-        //   this.$cookie.set('nickname', bindDate.data.user.nickname)
-        //   this.$store.state.Cookies.loginToken = bindDate.data.user.loginToken
-        //   this.$store.state.Cookies.nickname = bindDate.data.user.id
-        //   this.$store.state.Cookies.userId = bindDate.data.user.nickname
-        //   window.location.href = '/'
-        // }
+        this.$message.success(res.message)
+        window.location.href = '/'
+        console.log(res)
+      },
+      async bindOldUser() {
+        const account = {
+          account: this.oldAccountForm.account,
+          password: Md5.hashStr(this.oldAccountForm.password).toString()
+        }
+        const res = await this.$axios.post(`/api/auth/bind/qq/old/user`, {
+          ...account,
+          id: this.id
+        })
+        if (res.status !== 200) {
+          return this.$message.error(res.message)
+        }
+        this.$message.success(res.message)
+        window.location.href = '/'
+        console.log(res)
       },
       // 确认绑定旧账号
       submitBinding(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.bindUser('old')
-//            alert('submit!');
+            this.bindOldUser()
           } else {
             console.log('error submit!!');
             return false;
@@ -210,8 +174,7 @@
       submitRegister(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            this.bindUser('new')
-//            alert('submit!');
+            this.bindNewUser()
           } else {
             console.log('error submit!!');
             return false;
@@ -228,25 +191,19 @@
       },
       // 重新生成账号
       refreshAccount() {
-        this.autoAccountForm.account = this.github.login + '-' + this.getRandomAccount()
+        this.autoAccountForm.account = 'qq' + '-' + this.getRandomAccount()
       },
       getRandomAccount() {
         return Math.random().toString(36).substr(8)
       }
     },
-    components: {},
-    computed: {},
-    async mounted() {
-      let qqData = await this.$store.dispatch('qqAutoLogin', {
-        id: this.qq.openid
+    // components: {},
+    // computed: {},
+    async created() {
+      const autoRes = await this.$axios.post(`/api/auth/bind/qq/auto/login`, {
+        id: this.id
       })
-      if (qqData.status == 200) {
-        this.$cookie.set('loginToken', qqData.data.user.loginToken)
-        this.$cookie.set('userId', qqData.data.user.id)
-        this.$cookie.set('nickname', qqData.data.user.nickname)
-        this.$store.state.Cookies.loginToken = qqData.data.user.loginToken
-        this.$store.state.Cookies.nickname = qqData.data.user.id
-        this.$store.state.Cookies.userId = qqData.data.user.nickname
+      if (autoRes.status === 200) {
         window.location.href = '/'
       }
     }
