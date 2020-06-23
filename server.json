@@ -1,7 +1,7 @@
 {
   "apps": [
     {
-      "name": "nuxt-seo-website",
+      "name": "nuxt-seo-website-new",
       "script": "npm",
       "args" : "start",
       "watch": [
