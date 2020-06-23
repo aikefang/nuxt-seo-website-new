@@ -70,7 +70,6 @@
     </div>
   </div>
 </template>
-
 <script>
   import { Md5 } from 'ts-md5/dist/md5'
 

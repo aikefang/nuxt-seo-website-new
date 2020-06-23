@@ -1,0 +1,19 @@
+{
+  "apps": [
+    {
+      "name": "nuxt-seo-website",
+      "script": "npm",
+      "args" : "start",
+      "watch": [
+        "/home/wwwroot/nuxt-seo-website/watch.json"
+      ],
+      "watch_options": {
+        "usePolling": true
+      },
+      "env": {
+        "PORT": 3000,
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}
