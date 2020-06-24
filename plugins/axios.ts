@@ -3,7 +3,7 @@ import { AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios';
 export default function (app: any) {
   const axios = app.$axios
   // 基本配置
-  axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? 'http://localhost:2020' : 'https://v2.api.webascii.cn'
+  axios.defaults.baseURL = process.env.NODE_ENV == 'development' ? 'http://localhost:2020' : 'https://www.webascii.cn'
   axios.defaults.timeout = 10000
   axios.defaults.headers.post['Content-Type'] = 'application/json'
   axios.defaults.headers.patch['Content-Type'] = 'application/json'
