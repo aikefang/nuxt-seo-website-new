@@ -85,7 +85,7 @@
         redirect(`/login`)
       } else {
         return {
-          github: qqUserInfo.data.qq,
+          qq: qqUserInfo.data.qq,
           id: qqUserInfo.data.id
         }
       }
