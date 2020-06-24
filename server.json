@@ -5,7 +5,7 @@
       "script": "npm",
       "args" : "start",
       "watch": [
-        "/home/wwwroot/nuxt-seo-website/watch.json"
+        "/home/wwwroot/nuxt-seo-website-new/watch.json"
       ],
       "watch_options": {
         "usePolling": true
