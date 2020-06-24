@@ -3,6 +3,7 @@ import { AxiosResponse, AxiosRequestConfig, AxiosError } from 'axios';
 export default function (app: any) {
   const axios = app.$axios
   // 基本配置
+  axios.defaults.baseURL = '/'
   axios.defaults.timeout = 10000
   axios.defaults.headers.post['Content-Type'] = 'application/json'
   axios.defaults.headers.patch['Content-Type'] = 'application/json'
