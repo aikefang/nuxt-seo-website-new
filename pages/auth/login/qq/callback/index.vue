@@ -75,7 +75,7 @@
 
   export default {
     name: 'qqLogin',
-    async asyncData({store, route, params, redirect}) {
+    async asyncData({store, route, params, redirect, $axios}) {
       let qqUserInfo = await $axios.get('/api/auth/qq/user/userInfo', {
         params: {
           code: route.query.code
