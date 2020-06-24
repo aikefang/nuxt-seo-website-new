@@ -70,7 +70,7 @@ module.exports = {
     //   }
     // },
     '/api': {
-      target: process.env.NODE_ENV == 'development' ? 'http://localhost:2020' : 'https://new.api.webascii.cn', // api主机
+      target: process.env.NODE_ENV == 'development' ? 'http://localhost:2020' : 'https://v2.api.webascii.cn', // api主机
       changeOrigin: true,
       pathRewrite: {'^/api': '/api'}
     },
