@@ -11,15 +11,15 @@ export default function (app: any) {
 
   // 请求回调
   axios.onRequest((config: AxiosRequestConfig) => {
-    const token = Cookie.get('SYSESSIONID') || ''
-    config.headers.Authorization = `Bearer ${token}`
+    // const token = Cookie.get('SYSESSIONID') || ''
+    // config.headers.Authorization = `Bearer ${token}`
   })
 
   // 返回回调
   axios.onResponse((res: AxiosResponse) => {
-        if (res.headers.refreshtoken) {
-          Cookie.set('token', res.headers.refreshtoken)
-        }
+        // if (res.headers.refreshtoken) {
+        //   Cookie.set('token', res.headers.refreshtoken)
+        // }
         if (res.status === 200) {
           return res.data
         }

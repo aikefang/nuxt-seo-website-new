@@ -30,6 +30,9 @@ const createStore = () => {
           $axios.get('/api/user/info'),
           $axios.get('/api/biji/nav/list')
         ])
+
+        console.log(userInfo)
+
         if(userInfo.status === 200 && userInfo.data.userStatus === true) {
           store.commit('login/changeStatus', true)
           store.commit('global/setUserInfo', userInfo.data.userInfo)
