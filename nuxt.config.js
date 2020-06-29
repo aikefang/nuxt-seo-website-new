@@ -57,6 +57,27 @@ module.exports = {
   modules: [
     '@nuxtjs/axios',
     '@nuxtjs/proxy',
+    ['@nuxtjs/pwa', {
+      // dev: false,
+      // icon: false,
+      meta: false,
+      workbox: {
+        // importScripts: [
+        //   'custom-sw.js'
+        // ],
+        // swURL: 'static.webascii.cn/webascii/sw.js',
+        // publicPath: 'https://static.webascii.cn/',
+        workboxURL: 'https://static.webascii.cn/webascii/service-worker/workbox-v4.2.0/workbox-sw.js',
+        cacheAssets: false,
+        offline: true,
+        offlinePage: false,
+        config: {
+          modulePathPrefix: 'https://static.webascii.cn/webascii/service-worker/workbox-v4.2.0',
+          debug: false
+        },
+        cachingExtensions: '@/plugins/workbox-range-request.js',
+      }
+    }]
   ],
   // axios: {
   //   proxy: true
@@ -73,7 +94,7 @@ module.exports = {
       target: process.env.NODE_ENV == 'development' ? 'http://localhost:2020' : 'https://v2.api.webascii.cn', // api主机
       changeOrigin: true,
       pathRewrite: {'^/api': '/api'}
-    },
+    }
   },
   /*
   ** Build configuration
