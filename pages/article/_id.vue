@@ -434,7 +434,7 @@
     },
   }
 </script>
-<style lang="less">
+<style scoped lang="less">
   .preview-img.el-message-box {
     width: inherit;
     min-width: 300px;

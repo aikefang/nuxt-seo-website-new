@@ -1,33 +1,63 @@
 function getMachine(req) {
-  var deviceAgent = req.headers["user-agent"].toLowerCase();
-  var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/);
+  let deviceAgent = req.headers["user-agent"].toLowerCase();
+  let agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/);
   if (agentID) {
     return 'Mobile';
   } else {
     return 'PC';
   }
 }
+
 let getUrl = (route) => {
   switch (route.name) {
     case 'article-id':
-      return route.fullPath
+      return {
+        type: 4,
+        url: `/m/article/${route.params.id}/`
+      }
     case 'index':
-      return route.fullPath
+      return {
+        type: 3,
+        url: `/m/`
+      }
+    case 'm':
+      return {
+        type: 1,
+        url: `/`
+      }
+    case 'm-article-id':
+      return {
+        type: 2,
+        url: `/article/${route.params.id}/`
+      }
     default:
-      return '/'
+      return {
+        type: 0,
+        url: '/'
+      }
   }
 }
-let redirectUrl = ({ host, type, route }) => {
-  if (type === 'Mobile' && host === 'www.webascii.cn') {
-    console.log('移动端 - 域名：www.webascii.cn')
-    return 'https://m.webascii.cn' + getUrl(route)
+
+let redirectUrl = ({equipmentType, type, route}) => {
+  // 移动端 访问了PC首页
+  if (equipmentType === 'Mobile' && type === 3) {
+    return getUrl(route, type).url
   }
-  if (type === 'PC' && host === 'm.webascii.cn') {
-    console.log('PC端 - 域名：m.webascii.cn')
-    return 'https://www.webascii.cn' + getUrl(route)
+  // 移动端 访问了PC文章详情页
+  if (equipmentType === 'Mobile' && type === 4) {
+    return getUrl(route, type).url
+  }
+  // PC端 访问了移动端首页
+  if (equipmentType === 'PC' && type === 1) {
+    return getUrl(route, type).url
+  }
+  // PC端 访问了移动端文章详情页
+  if (equipmentType === 'PC' && type === 2) {
+    return getUrl(route, type).url
   }
   return false
 }
+
 export default function ({
                            isStatic,
                            isDev,
@@ -48,18 +78,22 @@ export default function ({
                            route,
                            params,
                            query,
-                           $axios
+                           $axios,
+                           ctx
                          }) {
   if (!req) {
     return
   }
-  let equipmentTyle = getMachine(req)
-  let url = redirectUrl({
-    host: req.headers.host,
-    type: equipmentTyle,
-    route
-  })
-  if (url) {
-    redirect(url)
+  let equipmentType = getMachine(req)
+  let data = getUrl(route)
+  if (data.type > 0) {
+    const url = redirectUrl({
+      type: data.type,
+      equipmentType,
+      route
+    })
+    if (url) {
+      redirect(url)
+    }
   }
 }

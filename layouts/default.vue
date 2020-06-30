@@ -30,13 +30,17 @@
   }
 
   html {
-    min-width: 768px;
+    /*min-width: 768px;*/
     font-family: -apple-system, SF UI Text, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
     font-size: 16px;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
     display: flex;
     min-height: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 0;
   }
 
   body {
