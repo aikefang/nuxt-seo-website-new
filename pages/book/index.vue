@@ -4,7 +4,7 @@
 		<div class="book-page">
 			<ul>
 				<li v-for="item in bookList" :key="item._id" class="jb-all">
-					<router-link :to="'/book/' + item._id + '/'">
+					<router-link :to="'/book/' + item._id + '/'" :title="item.bookName">
 						<!--<el-tooltip class="item" effect="dark" content="点击下载PDF" placement="right">-->
 						<div class="book-content">
 							<img class="book-img lazy-img-fadein"
@@ -186,16 +186,10 @@
     },
     head() {
       return {
-        script: [
-//          { src: '//static.webascii.cn/webascii/global/qiniu-v2.5.1/qiniu.min.js' }
-        ],
-        link: [
-//        { rel: 'stylesheet', href: '//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css' },
-        ],
-        title: `前端书籍PDF - webascii.cn`,
+        title: `前端书籍PDF_webascii.cn`,
         meta: [
-          {hid: 'keywords', name: 'keywords', content: 'javascript系列、jquery系列、HTML5系列、css系列'},
-          {hid: 'description', name: 'description', content: 'js书籍，html书籍，犀牛书，设计书籍'}
+          {hid: 'keywords', name: 'keywords', content: 'javascript系列,jquery系列,HTML5系列,css系列'},
+          {hid: 'description', name: 'description', content: 'js书籍,html书籍,犀牛书,设计书籍'}
         ]
       }
     },

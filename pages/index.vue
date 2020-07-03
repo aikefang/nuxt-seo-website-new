@@ -42,6 +42,23 @@
   import CountDown from '~/components/CountDown.vue'
 
   export default Vue.extend({
+    head() {
+      return {
+        title: `笔记网_学的不仅是实战，更是经验!`,
+        meta: [
+          {
+            hid: 'keywords',
+            name: 'keywords',
+            content: `笔记网,技术社区,技术文档,javascript,vue,react,jquery,html,css,nuxtjs,electron,小程序,flutter,service worker,dart,webpack,性能优化,nodejs,java,php,python,nginx,正则表达式,mongodb,mysql,centos,linux,git`
+          },
+          {
+            hid: 'description',
+            name: 'description',
+            content: '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'
+          }
+        ]
+      }
+    },
     components: {
       Logo,
       NavBar,
@@ -55,8 +72,7 @@
       store.commit('global/setNavStatus', 'index')
       const [
         bannerList,
-        recommendCategoryList,
-        // articleList,
+        recommendCategoryList
       ] = await Promise.all([
         $axios.get('/api/biji/banner/list', {
           params: {
@@ -67,13 +83,7 @@
           params: {
             type: 'hot'
           }
-        }),
-        // $axios.get('/api/biji/article/list', {
-        //   params: {
-        //     pageSize: 20,
-        //     pageNum: 1
-        //   }
-        // }),
+        })
       ])
       if (bannerList.status === 200) {
         store.commit('global/setBannerList', bannerList.data.list)
@@ -81,11 +91,7 @@
       if (recommendCategoryList.status === 200) {
         store.commit('global/setRecommendCategoryList', recommendCategoryList.data.list)
       }
-      // if(articleList.status === 200) {
-      //   store.commit('article/setArticleList', articleList.data.list)
-      // }
       await store.dispatch('article/getList')
-      // console.log(res)
     }
   })
 </script>

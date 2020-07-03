@@ -142,9 +142,18 @@
       return {
         script: scriptOrigin,
         link: linkOrigin,
-        title: `${this.noteContent.title} - webascii.cn`,
+        title: `${this.noteContent.title}_webascii.cn`,
         meta: [
-          {hid: 'description', name: 'description', content: this.noteContent.articleDescribe || '让记笔记成为一种习惯'}
+          {
+            hid: 'keywords',
+            name: 'keywords',
+            content: this.seoKeywords.toString()
+          },
+          {
+            hid: 'description',
+            name: 'description',
+            content: this.noteContent.articleDescribe || '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'
+          }
         ]
       }
     },
@@ -152,27 +161,6 @@
 //    scrollToTop: true,
     //预请求
     async asyncData({store, route, params, redirect, $axios}) {
-      // 需要重定向
-      // if (Number(params.id)) {
-      //   const redirectRes = await $axios.get('/api/biji/article/redirect', {
-      //     params: {
-      //       id: params.id
-      //     }
-      //   })
-      //   if (redirectRes.status === 200 && redirectRes.data.needRedirect) {
-      //     const rArr = route.path.split('/')
-      //     rArr[2] = redirectRes.data.redirect
-      //     redirect(`${rArr.join('/')}`)
-      //     return
-      //   }
-      // }
-
-
-      // const noteContent = await store.dispatch('article/getDetails', {
-      //   id: params.id,
-      //   imageMogr2: route.query.inline == 'edit' ? 0 : 1
-      // })
-
       const noteContent = await $axios.get('/api/biji/article/historyDetails', {
         params: {
           id: params.id
@@ -187,6 +175,7 @@
         newNoteList: noteContent.data.newNoteList,
         // 存储文章ID
         articleId: params.id,
+        seoKeywords: [noteContent.data.note.levelFirst.title, noteContent.data.note.levelSecond.title,  '技术文档']
       }
     },
     data() {

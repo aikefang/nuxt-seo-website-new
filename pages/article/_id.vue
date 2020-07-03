@@ -50,13 +50,13 @@
           <h5>作者最新文章</h5>
           <ul>
             <li v-for="item in newNoteList">
-              <a :href="'/article/' + item._id" class="jb-all" target="_blank">
+              <a :href="'/article/' + item._id" :title="item.title" class="jb-all" target="_blank">
                 <span>{{item.title}}</span>
                 <div class="img-box">
                   <img
                     v-lazy="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"
                     class="lazy-img-fadein"
-                    alt="预览图">
+                    :alt="item.title">
                 </div>
               </a>
               <!--              <router-link :to="'/article/'+item.id" class="jb-all">-->
@@ -187,9 +187,18 @@
       return {
         script: scriptOrigin,
         link: linkOrigin,
-        title: `${this.noteContent.title} - webascii.cn`,
+        title: `${this.noteContent.title}_webascii.cn`,
         meta: [
-          {hid: 'description', name: 'description', content: this.noteContent.articleDescribe || '让记笔记成为一种习惯'}
+          {
+            hid: 'keywords',
+            name: 'keywords',
+            content: this.seoKeywords.toString()
+          },
+          {
+            hid: 'description',
+            name: 'description',
+            content: this.noteContent.articleDescribe || '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'
+          }
         ]
       }
     },
@@ -226,26 +235,6 @@
         }
       })
 
-
-      // /api/biji/article/redirect
-
-      // console.log(noteContent)
-// //      let noteCommentList = store.dispatch('noteCommentList', {
-// //        articleId: params.id, // 文章ID
-// //      })
-//       let zan = '0'
-//       await Promise.all([noteContent])
-//         .then(info => {
-//           store.dispatch('setApiData', {
-//             key: 'noteContent',
-//             data: info[0].data.note
-//           })
-//           zan = info[0].data.note.zanStr
-//         })
-//         .catch(e => {
-//           // 重定向
-//           redirect('/error')
-//         })
       return {
         noteContent: noteContent.data.note,
         isAuthor: noteContent.data.isAuthor,
@@ -258,7 +247,8 @@
         articleId: params.id,
         inline: route.query.inline,
         zan: noteContent.data.note.zanStr,
-        historyList: historyListRes.data.list
+        historyList: historyListRes.data.list,
+        seoKeywords: [noteContent.data.note.levelFirst.title, noteContent.data.note.levelSecond.title,  '技术文档']
       }
     },
     data() {

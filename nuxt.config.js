@@ -5,7 +5,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: '笔记网 - 学的不仅是实战，更是经验!',
+    title: '笔记网_学的不仅是实战，更是经验!',
     meta: [
       {charset: 'utf-8'},
       {
@@ -13,7 +13,7 @@ module.exports = {
         content: 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'
       },
       {hid: 'keywords', name: 'keywords', content: 'webascii,笔记,webascii.cn'},
-      {hid: 'description', name: 'description', content: '让记笔记成为一种习惯'},
+      {hid: 'description', name: 'description', content: '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'},
       {name: 'apple-mobile-web-app-capable', content: 'yes'},
       {name: 'apple-mobile-web-app-status-bar-style', content: 'black'},
       {name: 'telephone=no', content: 'format-detection'},
