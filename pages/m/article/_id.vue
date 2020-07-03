@@ -7,8 +7,9 @@
         <div class="info-left">
           <a class="user-info">
             <img
-              :src="noteContent.author.headImg"
-              alt="">
+              v-lazy="noteContent.author.headImg"
+              class="lazy-img-fadein"
+              :alt="noteContent.author.nickname">
             <span class="user-nickname">{{ noteContent.author.nickname }}</span>
           </a>
           <a class="classify"># {{ noteContent.levelSecond.title }}</a>

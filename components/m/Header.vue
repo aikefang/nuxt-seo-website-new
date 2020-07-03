@@ -8,7 +8,8 @@
           href="/m/"
           class="logo">
           <img
-            src="https://static.webascii.cn/webascii/old_pictures/uploads/logo-min.png"
+            v-lazy="'https://static.webascii.cn/webascii/old_pictures/uploads/logo-min.png?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/100'"
+            class="lazy-img-fadein"
             alt="logo">
         </a>
         <span class="slogan">让记笔记成为一种习惯</span>
@@ -275,6 +276,8 @@
         .logo {
           display: flex;
           align-items: center;
+          width: 65px;
+          height: 42px;
           img {
             width: 65px;
             height: 42px;

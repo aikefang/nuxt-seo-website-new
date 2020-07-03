@@ -26,8 +26,9 @@
               :class="{'have-img':!!item.articleImageView}"
               class="wrap-img">
               <img
-                :src="item.articleImageViewMobile"
-                alt="">
+                v-lazy="item.articleImageViewMobile"
+                class="lazy-img-fadein"
+                :alt="item.title">
             </a>
           </li>
         </ul>
@@ -143,7 +144,7 @@
           border-bottom: 1px solid;
           border-color: #f0f0f0;
           .summary {
-            width: 100%;
+            flex: 1;
             margin-right: 10px;
             .summary-box {
               display: flex;
@@ -187,6 +188,10 @@
           .wrap-img {
             display: none;
             align-items: center;
+            width: 80px;
+            height: 45px;
+            background: rgba(234,234,234, .6);
+            box-shadow: 0 1px 1px 1px rgba(0, 34, 77, 0.1);
             &.have-img {
               display: flex;
             }

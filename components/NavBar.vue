@@ -5,7 +5,7 @@
 				<div class="nav-left">
 					<router-link to="/" class="logo">
 						<!--<img src="//static.webascii.cn/webascii/old_pictures/uploads/logo.png" alt="">-->
-						<img src="//static.webascii.cn/webascii/old_pictures/uploads/logo-min.png" alt="">
+						<img v-lazy="'//static.webascii.cn/webascii/old_pictures/uploads/logo-min.png?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/100'" class="lazy-img-fadein" alt="logo">
 					</router-link>
 					<div class="container-nav">
 						<div class="collapse">
@@ -262,13 +262,17 @@
 				display: flex;
 
 				.logo {
-					height: 46px;
+					height: 44px;
+          width: 68px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
 					padding: 0;
 					margin: 0 16px 0 16px;
 
 					img {
-						width: 68px;
-						vertical-align: middle;
+            height: 44px;
+            width: 68px;
 						border: 0;
 					}
 				}

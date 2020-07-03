@@ -4,9 +4,12 @@
         <div class="book-header">
             <div class="book-info-box">
                 <div class="book-img">
-                    <img :src="bookDetail.bookImg + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80'" alt="">
+                    <img
+                      class="lazy-img-fadein"
+                      v-lazy="bookDetail.bookImg + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80'"
+                      :alt="bookDetail.bookName">
                 </div>
-                <h1 class="book-title">{{bookDetail.bookName}}</h1>
+                <h1 class="book-title">{{ bookDetail.bookName }}</h1>
                 <ul class="book-meta">
                     <li>
                         <time :datetime="bookDetail.cTime">{{bookDetail.cTime | Format('yyyy-MM-dd hh:mm')}}</time>

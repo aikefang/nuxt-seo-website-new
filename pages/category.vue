@@ -63,7 +63,7 @@
 							<div class="node-box"
 									 v-for="item in list" :key="item._id">
 								<a class="article-image-view" :href="'/article/' + item._id + '/'" target="_blank">
-									<img :src="item.articleImageViewPc" alt="">
+									<img v-lazy="item.articleImageViewPc" class="lazy-img-fadein" :alt="item.title">
 								</a>
 								<div class="noteinfo">
 									<h2 class="media-heading">
@@ -609,6 +609,8 @@
 	}
 
 	.noteinfo {
+    display: flex;
+    flex-direction: column;
 		.media-heading {
 			height: 20px;
 			line-height: 20px;
@@ -616,6 +618,8 @@
 			overflow: hidden;
 			margin-bottom: 5px;
 			margin-top: 20px;
+      display: flex;
+      max-width: 990px;
 
 			> * {
 				vertical-align: middle;
@@ -630,12 +634,14 @@
 				color: #333;
 				display: inline-block;
 				height: 20px;
+        flex: 1;
 			}
 
 			.title {
-				width: 1100px;
-				max-width: 1100px;
+				/*width: 1100px;*/
+				/*max-width: 1100px;*/
 				overflow: hidden;
+        flex: 1;
 			}
 
 			.splitline {
@@ -676,31 +682,33 @@
 
 	.node-box {
 		display: flex;
-		/*margin-bottom: 20px;*/
-		position: relative;
 		border-bottom: 1px #dfdfdf dashed;
-		/*padding-bottom: 20px;*/
-		/*display: block;*/
 
 		em {
 			font-style: normal;
 		}
 
 		.article-image-view {
-			display: flex;
 			margin-top: 20px;
 			margin-right: 10px;
-
+      height: 90px;
+      width: 160px;
+      background: rgba(234,234,234, .6);
+      box-shadow: 0 2px 2px 2px rgba(0, 34, 77, 0.1);
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 			img {
 				height: 90px;
 				width: 160px;
-				box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
 				border-radius: 5px;
 			}
 		}
 	}
 
 	.noteinfo {
+    flex: 1;
 		.media-info {
 			em {
 				float: left;

@@ -3,10 +3,10 @@
 		<ul class="note-list">
 			<li v-for="item in article.articleList" :key="item.id" :class="{'have-img' : !!item.articleImageView != false}">
 				<a :href="'/article/' + item._id + '/'" class="wrap-img" v-if="!!item.articleImageView != false">
-					<img :src="item.articleImageView2" alt="" class="img-blur-done">
+					<img v-lazy="item.articleImageView2" :alt="item.title" class="img-blur-done lazy-img-fadein">
 				</a>
 				<div class="content">
-					<a :href="'/article/' + item._id + '/'" class="title tof">{{item.title}}</a>
+					<a :href="'/article/' + item._id + '/'" class="title tof">{{ item.title }}</a>
 					<!--<div class="author">-->
 					<!--<a class="avatar">-->
 					<!--<img :src="item.headImg" alt="">-->
@@ -31,10 +31,10 @@
 					</a>
 					<div class="author">
 						<a class="avatar">
-							<img :src="item.author.headImg" alt="">
+							<img v-lazy="item.author.headImg" :alt="item.author.nickname">
 						</a>
 						<div class="info">
-							<a class="nickname">{{item.author.nickname}}</a>
+							<a class="nickname">{{ item.author.nickname }}</a>
 							<span class="time" :data-origin-time="item.cTime">{{item.simplifyCTime}}</span>
 						</div>
 					</div>
@@ -56,6 +56,7 @@
 <script>
   import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
   import IndexArticleList from '~/components/skeleton/IndexArticleList.vue'
+
 
   export default {
     name: 'recommend-content',
@@ -150,12 +151,20 @@
 					right: 0;
 					width: 160px;
 					height: 90px;
+          background: rgba(234,234,234, .6);
+          box-shadow: 0 2px 2px 2px rgba(0, 34, 77, 0.1);
+          border-radius: 4px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
 
 					img {
-						width: 100%;
-						height: 100%;
+						/*width: 100%;*/
+						/*height: 100%;*/
+            width: 160px;
+            height: 90px;
 						border-radius: 4px;
-						border: 1px solid #f0f0f0;
+						/*border: 1px solid #f0f0f0;*/
 						vertical-align: middle;
 					}
 				}

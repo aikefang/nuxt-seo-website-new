@@ -7,8 +7,8 @@
 					<router-link :to="'/book/' + item._id + '/'">
 						<!--<el-tooltip class="item" effect="dark" content="点击下载PDF" placement="right">-->
 						<div class="book-content">
-							<img class="book-img"
-									 :src="item.bookImg + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80'"
+							<img class="book-img lazy-img-fadein"
+									 v-lazy="item.bookImg + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80'"
 									 :alt="item.bookName">
 							<div class="info">
 								<h3 class="jb-all" v-html="item.bookName"></h3>
