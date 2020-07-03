@@ -13,6 +13,15 @@ Vue.mixin({
           clearInterval(timer);
         }
       }, 10)
+    },
+    // 高度
+    scrollTop() {
+      return Math.max(
+        // chrome
+        document.body.scrollTop,
+        // firefox/IE
+        document.documentElement.scrollTop
+      )
     }
   }
 })

@@ -98,17 +98,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="article-placeholder" v-show="isLoading && hasMore">
-								<div class="img"></div>
-								<div class="content">
-									<div class="title"></div>
-									<div class="describe">
-										<div class="text"></div>
-										<div class="text"></div>
-									</div>
-									<div class="meta"></div>
-								</div>
-							</div>
+							<SearchArticleList v-show="isLoading && hasMore"></SearchArticleList>
 							<div class="article-empty" v-show="!isLoading && !hasMore && list.length > 0">
 								<i class="iconfont icon-kong"></i>
 								<span>暂无更多~</span>
@@ -134,6 +124,7 @@
 <script>
   import NavBar from '~/components/NavBar.vue'
   import BottomFooter from '~/components/Footer.vue'
+	import SearchArticleList from '~/components/skeleton/SearchArticleList.vue'
   import _ from 'lodash'
 
 
@@ -183,6 +174,7 @@
     components: {
       NavBar,
       BottomFooter,
+      SearchArticleList
     },
     async asyncData({store, route, params, redirect, $axios}) {
       if (Number(params.level1) || Number(params.level2)) {
@@ -389,7 +381,7 @@
           this.page++
           setTimeout(() => {
             this.searchData('push')
-          }, 500)
+          }, 300)
         }
       }
     }
@@ -401,56 +393,6 @@
 	}
 </style>
 <style scoped lang="less">
-	.article-placeholder {
-		display: flex;
-		padding-top: 15px;
-		transition: all 0.3s;
-
-		.img {
-			width: 160px;
-			height: 90px;
-			box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
-			border-radius: 5px;
-			background-color: #eaeaea;
-		}
-
-		.content {
-			margin-left: 10px;
-			flex: 1;
-
-			.title {
-				height: 20px;
-				width: 300px;
-				background-color: #eaeaea;
-				margin-bottom: 12px;
-			}
-
-			.describe {
-				.text {
-					height: 16px;
-					background-color: #eaeaea;
-					margin-bottom: 8px;
-
-					&:first-child {
-						width: 100%;
-						animation: loading 1s ease-in-out infinite;
-					}
-
-					&:last-child {
-						width: 60%;
-						animation: loading 1s ease-in-out -.5s infinite;
-					}
-				}
-			}
-
-			.meta {
-				height: 14px;
-				background-color: #eaeaea;
-				width: 200px;
-			}
-		}
-	}
-
 	.article-empty {
 		height: 80px;
 		display: flex;
@@ -467,34 +409,6 @@
 
 		> span {
 			padding-top: 5px;
-		}
-	}
-
-	@-webkit-keyframes loading {
-		0% {
-			width: 60%
-		}
-
-		50% {
-			width: 100%
-		}
-
-		to {
-			width: 60%
-		}
-	}
-
-	@keyframes loading {
-		0% {
-			width: 60%
-		}
-
-		50% {
-			width: 100%
-		}
-
-		to {
-			width: 60%
 		}
 	}
 

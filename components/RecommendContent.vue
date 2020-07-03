@@ -41,36 +41,88 @@
 				</div>
 			</li>
 		</ul>
-		<a class="load-more" v-show="!article.loading && article.more" @click="loadMore">阅读更多</a>
-		<a class="load-more no-click" v-show="article.loading && article.more">加载中...</a>
-		<a class="load-more no-click" v-show="!article.more && !article.loading">暂无更多</a>
+		<!-- 加载中骨架图 -->
+		<IndexArticleList v-show="isLoading && article.more"></IndexArticleList>
+		<a class="jb-all load-more bg-cb" v-show="!isLoading && article.more && article.pageNum >= 5" @click="loadMore">
+			<span>阅读更多</span>
+		</a>
+		<div class="article-empty" v-show="!article.more && !article.loading">
+			<i class="iconfont icon-kong"></i>
+			<span>暂无更多~</span>
+		</div>
 	</div>
 </template>
 
 <script>
   import {mapState, mapMutations, mapGetters, mapActions} from 'vuex'
+  import IndexArticleList from '~/components/skeleton/IndexArticleList.vue'
 
   export default {
     name: 'recommend-content',
     data() {
-      return {}
+      return {
+        isLoading: false
+			}
     },
-    components: {},
+    components: {
+      IndexArticleList
+		},
     computed: {
       ...mapState(['article']),
     },
     mounted() {
-      // console.log(this.article.articleList)
+      // console.log(this.article)
+      this.isLoading = false
+			// return
+      window.onscroll = () => {
+        // console.log(123123)
+        // 距离底部200px时加载一次
+        let bottomOfWindow = document.documentElement.offsetHeight - this.scrollTop() - window.innerHeight <= 200
+        if (bottomOfWindow && this.isLoading === false && this.article.more && this.article.pageNum < 5) {
+          this.isLoading = true
+          this.page++
+          setTimeout(async () => {
+            // console.log('load')
+            await this.$store.dispatch('article/getList')
+            this.isLoading = false
+          }, 300)
+        }
+      }
     },
     methods: {
       async loadMore() {
-        await this.$store.dispatch('article/getList')
+        // console.log(123123123)
+        this.isLoading = true
+        setTimeout(async () => {
+          console.log('load')
+          await this.$store.dispatch('article/getList')
+          this.isLoading = false
+        }, 300)
+        // await this.$store.dispatch('article/getList')
       }
     }
   }
 </script>
 
 <style scoped lang="less">
+	.article-empty {
+		height: 80px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 16px;
+		color: #999;
+
+		> i {
+			font-size: 26px;
+			margin-right: 10px;
+			color: #999;
+		}
+
+		> span {
+			padding-top: 5px;
+		}
+	}
 	.list-container {
 		.note-list {
 			margin: 0;
@@ -235,16 +287,6 @@
 						}
 					}
 				}
-
-				/*&.author {*/
-				/*margin-bottom: 14px;*/
-				/*font-size: 13px;*/
-				/**/
-				/*a {*/
-				/*color: #333;*/
-				/*cursor: pointer;*/
-				/*}*/
-				/*}*/
 			}
 		}
 
@@ -253,21 +295,28 @@
 			height: 40px;
 			margin: 30px auto 60px;
 			padding: 10px 15px;
-			text-align: center;
 			font-size: 15px;
-			color: #fff;
-			display: block;
-			width: 100%;
-			border-radius: 20px;
-			background-color: #a5a5a5;
+			color: #ea6f5a;
+			font-weight: bold;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			position: relative;
+			width: 180px;
+			border-radius: 5px;
+			background-color: #ffffff;
+			box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, .3);
 
+			z-index: 2;
 			&:hover {
 				color: #fff;
-				background-color: #9b9b9b
+				/*background-color: #9b9b9b;*/
+				cursor: pointer;
 			}
 
-			&.no-click {
-				cursor: not-allowed;
+			&:before {
+				background: #ea6f5a;
+				border-radius: 5px;
 			}
 		}
 	}
