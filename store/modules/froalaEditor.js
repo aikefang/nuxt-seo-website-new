@@ -23,6 +23,7 @@ const state = () => {
       'formatUL',
       'quote',
       'insertCode',
+      'inlineCode',
     ],
     // 独立编辑器toolbar
     toolbarButtonsWrite: [

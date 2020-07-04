@@ -46,27 +46,37 @@
             </div>
           </div>
         </div>
-        <div class="list new-article">
-          <h5>作者最新文章</h5>
-          <ul>
-            <li v-for="item in newNoteList">
-              <a :href="'/article/' + item._id" :title="item.title" class="jb-all" target="_blank">
-                <span>{{item.title}}</span>
-                <div class="img-box">
-                  <img
-                    v-lazy="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"
-                    class="lazy-img-fadein"
-                    :alt="item.title">
-                </div>
-              </a>
-              <!--              <router-link :to="'/article/'+item.id" class="jb-all">-->
-              <!--                <span>{{item.title}}</span>-->
-              <!--                <img-->
-              <!--                  :src="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"-->
-              <!--                  alt="">-->
-              <!--              </router-link>-->
-            </li>
-          </ul>
+        <div class="list">
+          <div v-if="inline !== 'edit'" class="fixed-box">
+            <div class="fixed-content">
+              <h5>目录</h5>
+              <div class="anchor-list-box">
+                <ul class="anchor-list">
+                  <li :class="[item.tag, item.id]" class="jb-all" v-for="(item, index) in noteContent.anchorList" @click="goAnchor(item.id)" :key="index">
+                    <a class="jb-all" :href="'#' + item.id" rel="external nofollow">
+                      {{ item.text }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!--<ul>-->
+          <!--<li v-for="item in newNoteList">-->
+          <!--<a :href="'/article/' + item._id" :alt="item.title" class="jb-all" target="_blank">-->
+          <!--<span>{{item.title}}</span>-->
+          <!--<div class="img-box">-->
+          <!--<img-->
+          <!--v-lazy="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"-->
+          <!--class="lazy-img-fadein"-->
+          <!--:alt="item.title">-->
+          <!--</div>-->
+          <!--</a>-->
+          <!--</li>-->
+          <!--</ul>-->
+
+
         </div>
       </div>
     </div>
@@ -248,7 +258,7 @@
         inline: route.query.inline,
         zan: noteContent.data.note.zanStr,
         historyList: historyListRes.data.list,
-        seoKeywords: [noteContent.data.note.levelFirst.title, noteContent.data.note.levelSecond.title,  '技术文档']
+        seoKeywords: [noteContent.data.note.levelFirst.title, noteContent.data.note.levelSecond.title, '技术文档']
       }
     },
     data() {
@@ -265,7 +275,7 @@
     },
     computed: {
       // ...mapState(['apiData']),
-      ...mapState(['login'])
+      ...mapState(['login', 'froalaEditor'])
     },
     methods: {
 //      edit() {
@@ -317,14 +327,13 @@
       },
       // 实时编辑
       realTimeEdit() {
-        let that = this
         require('~/plugins/froala-editor-custom-toolbar')()
         this.editDom = $('#content-view')
         this.editDom.froalaEditor({
           toolbarInline: true,
-          toolbarButtons: this.$store.state.toolbarButtons,
+          toolbarButtons: this.froalaEditor.toolbarButtons,
           // 编辑框左侧加号
-          quickInsertButtons: this.$store.state.quickInsertButtons,
+          quickInsertButtons: this.froalaEditor.quickInsertButtons,
           pastePlain: true,
           theme: 'gray',
           fontFamilySelection: true,
@@ -393,6 +402,46 @@
 
 
       },
+
+      computerIndex(sTop) {
+        let cacheArr = []
+        const anchorTags = $('.anchor-tag')
+        anchorTags.map((index, data) => {
+          cacheArr.push($(data).offset().top)
+        })
+        for (let i = 0; i < cacheArr.length; i++) {
+          // 如果下一个索引存在
+          if (cacheArr[i + 1]) {
+            // 匹配到索引值
+            if (sTop >= (cacheArr[i] - 60) && sTop < (cacheArr[i + 1] - 60)) {
+              return {
+                index: i,
+                id: anchorTags.eq(i).attr('anchor-id')
+              }
+            } else {
+              continue
+            }
+          } else { // 不存在(最后一个索引)
+            // 返回索引
+            if (!!cacheArr[1] && sTop < (cacheArr[1] - 60)) {
+              return undefined
+            }
+            return {
+              index: i,
+              id: anchorTags.eq(i).attr('anchor-id')
+            }
+          }
+        }
+      },
+      goAnchor(selector) {
+        let anchor = this.$el.querySelector(`[anchor-id=${selector}]`)
+        // document.documentElement.scrollTop = anchor.offsetTop - 50
+        window.scrollTo({
+          top: anchor.offsetTop - 50,
+          behavior: "smooth"
+        })
+
+      },
     },
     created() {
       // console.log(123123)
@@ -422,12 +471,32 @@
           };
           SyntaxHighlighter.defaults['auto-links'] = false
           SyntaxHighlighter.all();
+
+          window.onscroll = () => {
+            if (this.scrollTop() > $('.fixed-box').offset().top - 60) {
+              $('.fixed-content').addClass('fixed')
+            } else {
+              $('.fixed-content').removeClass('fixed')
+            }
+//          // 防抖 提升性能
+            clearTimeout(this.selectLink)
+            this.selectLink = setTimeout(() => {
+              const data = this.computerIndex($(window).scrollTop())
+              if (data === undefined) {
+                $('.anchor-list li').removeClass('select')
+                return
+              }
+
+              $('.anchor-list li').removeClass('select')
+              $(`.${data.id}`).addClass('select')
+            }, 20)
+          }
         }
         this.$refs.content.addEventListener('click', (ev) => {
           let eve = ev || window.event
           let target = eve.target || eve.srcElement
           if (target.nodeName.toLowerCase() === 'img') {
-            console.log(target.getAttribute('src'))
+//            console.log(target.getAttribute('src'))
             this.$refs['img-view'].open(target.getAttribute('src'))
           }
         })
@@ -603,7 +672,7 @@
           a {
             width: 110px;
             height: 110px;
-            background: rgba(234,234,234, .6);
+            background: rgba(234, 234, 234, .6);
             box-shadow: 0 2px 2px 2px rgba(0, 34, 77, 0.1);
             border-radius: 50%;
             display: flex;
@@ -664,81 +733,186 @@
         }
       }
 
-      .list {
-        display: flex;
-        flex-direction: column;
-
-        h5 {
-          font-weight: 500;
-          font-size: 18px;
-          position: relative;
-          padding-left: 20px;
-          margin-bottom: 15px;
-          margin-top: 0;
-
-          &:after {
-            display: block;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            width: .3125rem;
-            height: 100%;
-            background: #0366d6;
-            content: '';
-            position: absolute;
+      .fixed-box {
+        .fixed-content {
+          background: #f7f7f7;
+          &.fixed {
+            position: fixed;
+            top: 60px;
+            width: 320px;
           }
-        }
-
-        ul {
-          li {
-            padding: 0 20px;
-            display: flex;
+          h5 {
+            font-weight: 500;
+            font-size: 18px;
+            position: relative;
+            padding-left: 20px;
             margin-bottom: 15px;
+            margin-top: 0;
 
-            a {
-              display: flex;
-              width: 100%;
-              color: #333;
+            &:after {
+              display: block;
+              top: 0;
+              bottom: 0;
+              left: 0;
+              width: .3125rem;
+              height: 100%;
+              background: #0366d6;
+              content: '';
+              position: absolute;
+            }
+          }
+          .anchor-list {
+            display: flex;
+            flex-direction: column;
+            position: relative;
 
-              .img-box {
-                background: rgba(234, 234, 234, .6);
-                box-shadow: 0 1px 1px 1px rgba(0, 34, 77, 0.1);
-                width: 80px;
-                height: 45px;
-                border-radius: 3px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                img {
-                  width: 80px;
-                  height: 45px;
-                  border-radius: 3px;
-                  box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
+            &:before {
+              content: ' ';
+              position: absolute;
+              top: 0;
+              left: 20px;
+              bottom: 0;
+              width: 2px;
+              background-color: #ebedef;
+              opacity: .5;
+            }
 
+            /*padding-left: 20px;*/
+            li {
+              padding: 5px 0;
+              position: relative;
+              &.h1 {
+                padding-left: 30px;
+                font-weight: bold;
+                a {
+                  &:before {
+                    left: -12px;
+                    margin-top: -3px;
+                    width: 6px;
+                    height: 6px;
+                  }
+                }
+              }
+              &.h2 {
+                padding-left: 45px;
+              }
+              &.h3 {
+                padding-left: 60px;
+              }
+              &.h4 {
+                padding-left: 70px;
+              }
+              &.h5 {
+                padding-left: 80px;
+              }
+              &.h6 {
+                padding-left: 90px;
+              }
+              &:hover {
+                cursor: pointer;
+                background-color: #ebedef
+              }
+              &.select {
+                background-color: #ebedef;
+                a {
+                  color: #007fff;
+                }
+              }
+              a {
+                position: relative;
+                &:before {
+                  content: ' ';
+                  position: absolute;
+                  top: 50%;
+                  left: -10px;
+                  margin-top: -2px;
+                  width: 4px;
+                  height: 4px;
+                  background-color: currentColor;
+                  border-radius: 50%;
                 }
               }
 
-              span {
-                width: 100%;
-                display: -webkit-box;
-                -webkit-box-orient: vertical;
-                -webkit-line-clamp: 2;
-                overflow: hidden;
-                font-size: 16px;
-                line-height: 22px;
-                margin-right: 10px;
-              }
-
-              &:hover {
-                color: #ea6f5a;
-              }
-
-              /*display: flex;*/
-              /*align-items: center;*/
             }
           }
         }
       }
+
+      /*.list {*/
+      /*display: flex;*/
+      /*flex-direction: column;*/
+
+      /*h5 {*/
+      /*font-weight: 500;*/
+      /*font-size: 18px;*/
+      /*position: relative;*/
+      /*padding-left: 20px;*/
+      /*margin-bottom: 15px;*/
+      /*margin-top: 0;*/
+
+      /*&:after {*/
+      /*display: block;*/
+      /*top: 0;*/
+      /*bottom: 0;*/
+      /*left: 0;*/
+      /*width: .3125rem;*/
+      /*height: 100%;*/
+      /*background: #0366d6;*/
+      /*content: '';*/
+      /*position: absolute;*/
+      /*}*/
+      /*}*/
+
+      /*ul {*/
+      /*li {*/
+      /*padding: 0 20px;*/
+      /*display: flex;*/
+      /*margin-bottom: 15px;*/
+
+      /*a {*/
+      /*display: flex;*/
+      /*width: 100%;*/
+      /*color: #333;*/
+
+      /*.img-box {*/
+      /*background: rgba(234, 234, 234, .6);*/
+      /*box-shadow: 0 1px 1px 1px rgba(0, 34, 77, 0.1);*/
+      /*width: 80px;*/
+      /*height: 45px;*/
+      /*border-radius: 3px;*/
+      /*display: flex;*/
+      /*justify-content: center;*/
+      /*align-items: center;*/
+      /*img {*/
+      /*width: 80px;*/
+      /*height: 45px;*/
+      /*border-radius: 3px;*/
+      /*box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);*/
+
+      /*}*/
+      /*}*/
+
+      /*span {*/
+      /*width: 100%;*/
+      /*display: -webkit-box;*/
+      /*-webkit-box-orient: vertical;*/
+      /*-webkit-line-clamp: 2;*/
+      /*overflow: hidden;*/
+      /*font-size: 16px;*/
+      /*line-height: 22px;*/
+      /*margin-right: 10px;*/
+      /*}*/
+
+      /*&:hover {*/
+      /*color: #ea6f5a;*/
+      /*}*/
+
+      /*!*display: flex;*!*/
+      /*!*align-items: center;*!*/
+      /*}*/
+      /*}*/
+      /*}*/
+      /*}*/
     }
   }
 </style>

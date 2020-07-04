@@ -4,27 +4,32 @@ module.exports = {
   /*
   ** Headers of the page
   */
-  head: {
-    title: '笔记网_学的不仅是实战，更是经验!',
-    meta: [
-      {charset: 'utf-8'},
-      {
-        name: 'viewport',
-        content: 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'
-      },
-      {hid: 'keywords', name: 'keywords', content: 'webascii,笔记,webascii.cn'},
-      {hid: 'description', name: 'description', content: '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'},
-      {name: 'apple-mobile-web-app-capable', content: 'yes'},
-      {name: 'apple-mobile-web-app-status-bar-style', content: 'black'},
-      {name: 'telephone=no', content: 'format-detection'},
-    ],
-    link: [
-      {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-      // { rel: 'stylesheet', href: '/common/common.css' }
-    ],
-    script: [
-      {src: 'https://hm.baidu.com/hm.js?8cabd1fde82e8b8e04e154ec39d7d92d'}
-    ]
+  head() {
+    const script = []
+    if (process.env.NODE_ENV !== 'development') {
+      script.push({src: 'https://hm.baidu.com/hm.js?8cabd1fde82e8b8e04e154ec39d7d92d'})
+    }
+
+    return {
+      title: '笔记网_学的不仅是实战，更是经验!',
+      meta: [
+        {charset: 'utf-8'},
+        {
+          name: 'viewport',
+          content: 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0'
+        },
+        {hid: 'keywords', name: 'keywords', content: 'webascii,笔记,webascii.cn'},
+        {hid: 'description', name: 'description', content: '笔记网(webascii.cn)，让你全面学习前端、后端、数据库等开发知识，快速掌握开发技能。'},
+        {name: 'apple-mobile-web-app-capable', content: 'yes'},
+        {name: 'apple-mobile-web-app-status-bar-style', content: 'black'},
+        {name: 'telephone=no', content: 'format-detection'},
+      ],
+      link: [
+        {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
+        // { rel: 'stylesheet', href: '/common/common.css' }
+      ],
+      script,
+    }
   },
   /*
   ** Customize the progress-bar color
