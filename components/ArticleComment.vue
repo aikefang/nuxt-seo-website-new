@@ -103,16 +103,18 @@
 				</div>
 			</div>
 		</div>
-		<div class="pagination-box" v-show="total > 0">
-			<el-pagination
-				layout="prev, pager, next"
-				prev-text="上一页"
-				next-text="下一页"
-				:page-size="pageSize"
-				@current-change="pageSizeChange"
-				:total="total">
-			</el-pagination>
-		</div>
+		<div v-show="hasMore" class="pagination-box" @click="loadCommentList">查看更多</div>
+		<div v-show="!hasMore" class="pagination-box no-more">暂无更多~</div>
+<!--		<div class="pagination-box" v-show="total > 0">-->
+<!--			<el-pagination-->
+<!--				layout="prev, pager, next"-->
+<!--				prev-text="上一页"-->
+<!--				next-text="下一页"-->
+<!--				:page-size="pageSize"-->
+<!--				@current-change="pageSizeChange"-->
+<!--				:total="total">-->
+<!--			</el-pagination>-->
+<!--		</div>-->
 	</div>
 </template>
 
@@ -124,6 +126,9 @@
     data() {
       return {
         comment: [],
+				commentNoRepeat: {
+
+				},
         commentOk: false,
         initEdit: {
           replyOk: false,
@@ -137,7 +142,8 @@
 				total: 0,
         // allPage: 0,
         // allLength: 0,
-        allTotal: 0
+        allTotal: 0,
+				hasMore: true
       }
     },
     props: {
@@ -150,9 +156,12 @@
         this.initEdit.type = null
         this.initEdit.child = {}
       },
-      pageSizeChange(num) {
-        this.pageNum = num
-        this.initCommentList()
+      loadCommentList() {
+        if (this.hasMore === false) {
+          return
+				}
+        this.pageNum++
+        this.initCommentList('push')
       },
       formatCode() {
         SyntaxHighlighter.highlight()
@@ -199,7 +208,7 @@
 //          }
 //        })
       },
-      async initCommentList() {
+      async initCommentList(type) {
         const params = {
           id: this.articleId,
           pageNum: this.pageNum,
@@ -212,7 +221,25 @@
           this.$message.error('评论获取失败')
         })
         if (res.status === 200) {
-          this.comment = res.data.list
+          if (type === 'push') {
+						const newComment = []
+            res.data.list.forEach(data => {
+              if (!this.commentNoRepeat[data._id]) {
+                newComment.push(data)
+							}
+						})
+            this.comment = this.comment.concat(newComment)
+					} else {
+            this.comment = res.data.list.map(data => {
+              this.commentNoRepeat[data._id] = 1
+              return data
+						})
+					}
+
+          if (res.data.list.length < 10) {
+            this.hasMore = false
+					}
+
 					this.total = res.data.total
 					this.allTotal = res.data.allTotal
           this.$emit('changeCommentNum', this.allTotal)
@@ -297,45 +324,27 @@
           this.$message.warning('请输入内容')
           return
         }
-//        let preDom = $('#reply-edit pre')
-//        for (let item = 0; item < preDom.length; item++) {
-//          hljs.highlightBlock(preDom[item])
-//        }
+
         const res = await this.$axios.post(`/api/user-comment/create`, {
           article: this.articleId,
           content
         })
 
 				if (res.status === 200) {
-				  this.initCommentList()
+				  // this.initCommentList()
+          // 新的评论 - 头部插入
+          if (res.data.type === 'new') {
+            this.comment.unshift(res.data.data)
+          } else if (res.data.type === 'old') { // 回复的评论，替换相关条目
+            for (let i = 0; i < this.comment.length; i++) {
+              if (this.comment[i]._id === res.data.data._id) {
+                this.comment[i].children = res.data.data.children
+                break
+              }
+            }
+          }
           this.editDom.froalaEditor('html.set', '')
 				}
-
-//         this.$store.dispatch('addNoteComment', {
-//           articleId: this.articleId, // 文章ID
-//           content: content, // 内容
-//           publisherName: this.$store.state.Cookies.nickname,
-//         })
-//           .then(info => {
-//             if (info.status === 200) {
-//               this.$message.success('评论成功~')
-//               this.editDom.froalaEditor('html.set', '')
-//               this.commentOk = false
-//               this.initCommentList()
-// //              this.cleanAt()
-//             } else {
-// //              this.cleanAt()
-//               this.$message.error('评论失败，请联系管理员')
-//               this.commentOk = true
-//             }
-//           })
-//           .catch(error => {
-//             this.$message.error('评论失败，请联系管理员')
-// //            this.cleanAt()
-//             this.commentOk = true
-//           })
-
-
       },
       // 回复评论
       async commentReply() {
@@ -348,10 +357,6 @@
           this.$message.warning('请输入内容')
           return
         }
-//        let preDom = $('.reply-edit pre')
-//        for (let item = 0; item < preDom.length; item++) {
-//          hljs.highlightBlock(preDom[item])
-//        }
 
         const params = {
           article: this.articleId,
@@ -373,7 +378,23 @@
           this.$message.success('评论成功~')
           this.initEdit.editDom.froalaEditor('html.set', '')
           this.initEdit.replyOk = false
-          this.initCommentList()
+
+
+					// 新的评论 - 头部插入
+          if (res.data.type === 'new') {
+            this.comment.unshift(res.data.data)
+          } else if (res.data.type === 'old') { // 回复的评论，替换相关条目
+						for (let i = 0; i < this.comment.length; i++) {
+              if (this.comment[i]._id === res.data.data._id) {
+                this.comment[i].children = res.data.data.children
+								break
+              }
+						}
+					}
+
+
+
+          // this.initCommentList()
           this.cleanAt()
         } else {
           this.$message.error('评论失败，请联系管理员')
@@ -510,80 +531,14 @@
 </script>
 <style lang="less">
 	.article-comment {
-		.pagination-box {
-			.el-pagination {
-				display: flex;
-			}
-
-			.btn-prev, .btn-next, .el-pager li.number, .el-pager li.more {
-				height: 36px;
-				border-radius: 36px;
-				color: #969696;
-			}
-
-			.btn-prev, .btn-next {
-				min-width: 36px;
-				margin: 0 5px;
-				border: 1px solid #ddd;
-
-				&:hover {
-					background-color: rgba(0, 0, 0, .05);
-					color: #969696;
-				}
-			}
-
-			.btn-prev[disabled=disabled], .btn-next[disabled=disabled] {
-				color: #dedede;
-
-				&:hover {
-					background-color: inherit;
-				}
-			}
-
-			.el-pager li.number, .el-pager li.more {
-				width: 36px;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-
-			.btn-prev {
-				padding: 0 15px;
-			}
-
-			.btn-next {
-				padding: 0 15px;
-			}
-
-			.el-pager {
-				display: flex;
-
-				li.number {
-					border: 1px solid #ddd;
-					margin: 0 5px;
-
-					&.active {
-						font-weight: 700;
-						border: none;
-					}
-
-					&:hover {
-						background-color: rgba(0, 0, 0, .05);
-						color: #969696;
-					}
-				}
-
-				li.more {
-					&:hover {
-						color: #969696;
-					}
-				}
-			}
-		}
-
 		.comment-list {
 			.comment-wrap {
 				.content {
+					img {
+						box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
+						margin: 0 auto;
+						display: inline-block;
+					}
 					ul {
 						list-style: inherit;
 						padding-left: 40px;
@@ -638,7 +593,6 @@
 	.article-comment {
 		/*width: 880px;*/
 		/*margin: 0 auto;*/
-		padding-bottom: 50px;
 		padding-top: 20px;
 
 		.comment-content {
@@ -774,6 +728,7 @@
 							width: 38px;
 							height: 38px;
 							border-radius: 100%;
+							cursor: pointer !important;
 						}
 					}
 
@@ -909,11 +864,13 @@
 							margin-bottom: 6px;
 
 							.reply-author {
-								color: #3194d0;
+								/*color: #3194d0;*/
+								color: #333;
 							}
 
 							.at-author {
-								color: #3194d0;
+								/*color: #3194d0;*/
+								color: #333;
 							}
 
 							img {
@@ -921,6 +878,7 @@
 								height: 20px;
 								margin-right: 5px;
 								border-radius: 100%;
+								cursor: pointer !important;
 							}
 						}
 
@@ -1074,6 +1032,22 @@
 			display: flex;
 			justify-content: center;
 			align-items: center;
+			height: 40px;
+			cursor: pointer;
+			color: #ea6f5a;
+			&:hover {
+				opacity: 0.8;
+			}
+			&.no-more {
+				color: #999;
+				cursor: default;
+				&:hover {
+					opacity: 1;
+				}
+			}
+			/*display: flex;*/
+			/*justify-content: center;*/
+			/*align-items: center;*/
 		}
 
 	}

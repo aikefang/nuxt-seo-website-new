@@ -662,9 +662,9 @@
         align-items: center;
         width: 100%;
         height: 95px;
-        background: #f7f7f7;
+        /*background: #f7f7f7;*/
         cursor: pointer;
-        border-bottom: 1px #ececec solid;
+        /*border-bottom: 1px #ececec solid;*/
         a {
           display: flex;
           flex-direction: column;

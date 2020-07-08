@@ -1,133 +1,142 @@
 <template>
-  <div>
-    <NavBar></NavBar>
-    <div class="note">
-      <div class="post">
-        <div class="article wrap">
-          <h1 class="title">{{noteContent.title}}</h1>
-          <div class="info-content">
-            <span>{{noteContent.author.nickname}}</span>
-            <span>{{noteContent.views}}阅读</span>
-            <el-tooltip class="item" effect="dark"
-                        :content="noteContent.cTime | format('yyyy-MM-dd hh:mm')"
-                        placement="top">
-              <span>{{noteContent.simplifyCTime}}</span>
-            </el-tooltip>
-          </div>
-          <div class="show-content">
-            <!--<div class="describe" v-if="!!noteContent.articleDescribe === true">-->
-            <!--{{noteContent.articleDescribe}}-->
-            <!--</div>-->
-            <div ref="content" id="content-view" class="article-content fr-view"
-                 v-html="noteContent.content"></div>
-          </div>
-        </div>
-        <ArticleHistory :list="historyList" :isAuthor="isAuthor"></ArticleHistory>
-        <ArticleComment @changeCommentNum="commentNum" :articleId="articleId" :edit="inline"></ArticleComment>
-      </div>
-      <div class="other-info">
-        <div class="author-info">
-          <div class="author-avatar">
-            <a>
-              <img v-lazy="noteContent.author.headImg" class="lazy-img-fadein" alt="作者头像">
-            </a>
-          </div>
-          <div class="author-name">
-            <span>{{noteContent.author.nickname}}</span>
-          </div>
-          <div class="countbar">
-            <div class="articles">
-              <b>{{allArticleNum}}</b>
-              <span>文章数</span>
+	<div class="article-page">
+		<NavBar></NavBar>
+		<div class="note">
+			<div class="post">
+				<div class="article wrap">
+					<h1 class="title">{{noteContent.title}}</h1>
+					<div class="info-content">
+						<span>{{noteContent.author.nickname}}</span>
+						<span>{{noteContent.views}}阅读</span>
+						<el-tooltip class="item" effect="dark"
+												:content="noteContent.cTime | format('yyyy-MM-dd hh:mm')"
+												placement="top">
+							<span>{{noteContent.simplifyCTime}}</span>
+						</el-tooltip>
+					</div>
+					<div class="show-content">
+						<!--<div class="describe" v-if="!!noteContent.articleDescribe === true">-->
+						<!--{{noteContent.articleDescribe}}-->
+						<!--</div>-->
+						<div ref="content" id="content-view" class="article-content fr-view"
+								 v-html="noteContent.content"></div>
+					</div>
+				</div>
+				<ArticleHistory :list="historyList" :isAuthor="isAuthor"></ArticleHistory>
+				<ArticleComment ref="article-comment" @changeCommentNum="commentNum" :articleId="articleId" :edit="inline"></ArticleComment>
+			</div>
+			<div class="other-info">
+				<div class="author-info">
+          <div class="title">关于作者</div>
+					<div class="author-box">
+            <div class="author-avatar">
+              <a>
+                <img v-lazy="noteContent.author.headImg" class="lazy-img-fadein" alt="作者头像">
+              </a>
             </div>
-            <div class="views">
-              <b>{{allViewsStr}}</b>
-              <span>阅读量</span>
+            <div class="author-name tof">
+              {{noteContent.author.nickname}}
             </div>
           </div>
-        </div>
-        <div class="list">
-          <div v-if="inline !== 'edit'" class="fixed-box">
-            <div class="fixed-content">
-              <h5>目录</h5>
-              <div class="anchor-list-box">
-                <ul class="anchor-list">
-                  <li :class="[item.tag, item.id]" class="jb-all" v-for="(item, index) in noteContent.anchorList" @click="goAnchor(item.id)" :key="index">
-                    <a class="jb-all" :href="'#' + item.id" rel="external nofollow">
-                      {{ item.text }}
-                    </a>
-                  </li>
-                </ul>
-              </div>
+          <div class="num-box">
+            <div>
+              <i class="iconfont icon-icon_article"></i>
             </div>
+            <span>总文章数</span>
+            <b>{{allArticleNum}}</b>
           </div>
-
-          <!--<ul>-->
-          <!--<li v-for="item in newNoteList">-->
-          <!--<a :href="'/article/' + item._id" :alt="item.title" class="jb-all" target="_blank">-->
-          <!--<span>{{item.title}}</span>-->
-          <!--<div class="img-box">-->
-          <!--<img-->
-          <!--v-lazy="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"-->
-          <!--class="lazy-img-fadein"-->
-          <!--:alt="item.title">-->
-          <!--</div>-->
-          <!--</a>-->
-          <!--</li>-->
-          <!--</ul>-->
-
-
-        </div>
-      </div>
-    </div>
-    <div class="flex-menu-left">
-      <ul>
-        <el-tooltip effect="dark" content="当前页面编辑" placement="right">
-          <li class="jb-all bg-cb edit-fast no-number" v-if="isAuthor && inline != 'edit'">
-            <a :href="'/article/' + articleId + '?inline=edit'">
-              <i class="iconfont icon-tuanduicankaoxian-"></i>
-              <span class="name">快编</span>
-            </a>
-          </li>
-        </el-tooltip>
-        <el-tooltip effect="dark" content="快速保存" placement="right">
-          <li class="jb-all bg-cb submit no-number" v-if="isAuthor && inline == 'edit'"
-              @click="publishEdit(articleId)">
-            <i class="iconfont icon-checkmark-circle"></i>
-            <span class="name">保存</span>
-          </li>
-        </el-tooltip>
-        <el-tooltip effect="dark" content="新页面编辑" placement="right">
-          <li class="jb-all bg-cb edit no-number" v-if="isAuthor">
-            <a :href="'/write/'+articleId">
-              <i class="iconfont icon-bianji"></i>
-              <span class="name">编辑</span>
-            </a>
-          </li>
-        </el-tooltip>
-        <li class="jb-all bg-cb pinglun" @click="goComment">
-          <i class="iconfont icon-pinglun"></i>
-          <span class="name">评论</span>
-          <span class="number">{{commentLength}}</span>
-        </li>
-        <li class="jb-all bg-cb zan" @click="goZan">
-          <i class="iconfont icon-dianzan" ref="zan"></i>
-          <span class="name">赞</span>
-          <span class="number">{{zan}}</span>
-        </li>
-      </ul>
-    </div>
-    <div class="flex-menu-right">
-      <ul>
-        <li class="jb-all bg-cb top no-number" @click="goTop">
-          <i class="iconfont icon-huidaodingbu"></i>
-          <span class="name">Top</span>
-        </li>
-      </ul>
-    </div>
-    <BottomFooter></BottomFooter>
-    <ImgView ref="img-view"></ImgView>
-  </div>
+          <div class="num-box">
+            <div>
+              <i class="iconfont icon-browse"></i>
+            </div>
+            <span>总阅读量</span>
+            <b>{{allViewsStr}}</b>
+          </div>
+				</div>
+				<div class="list">
+					<div class="recommend-list">
+            <div class="title">相关推荐</div>
+						<ul>
+							<li v-for="item in recommendList">
+								<a :href="'/article/' + item._id + '/'" :alt="item.title" class="jb-all" target="_blank">
+									<span>{{item.title}}</span>
+									<div class="img-box">
+										<img
+											v-lazy="item.articleImageView + '?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80|imageView2/1/w/80/h/45'"
+											class="lazy-img-fadein"
+											:alt="item.title">
+									</div>
+								</a>
+							</li>
+						</ul>
+					</div>
+					<!-- 当前不是状态不是编辑 && 锚点个数 > 0 -->
+					<div v-if="inline !== 'edit' && noteContent.anchorList.length > 0" class="fixed-box">
+						<div class="fixed-content">
+							<h5>目录</h5>
+							<div class="anchor-list-box">
+								<ul class="anchor-list">
+									<li :class="[item.tag, item.id]" class="jb-all" v-for="(item, index) in noteContent.anchorList"
+											@click="goAnchor(item.id)" :key="index">
+										<a class="jb-all" :href="'#' + item.id" rel="external nofollow">
+											{{ item.text }}
+										</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="flex-menu-left">
+			<ul>
+				<el-tooltip effect="dark" content="当前页面编辑" placement="right">
+					<li class="jb-all bg-cb edit-fast no-number" v-if="isAuthor && inline != 'edit'">
+						<a :href="'/article/' + articleId + '?inline=edit'">
+							<i class="iconfont icon-tuanduicankaoxian-"></i>
+							<span class="name">快编</span>
+						</a>
+					</li>
+				</el-tooltip>
+				<el-tooltip effect="dark" content="快速保存" placement="right">
+					<li class="jb-all bg-cb submit no-number" v-if="isAuthor && inline == 'edit'"
+							@click="publishEdit(articleId)">
+						<i class="iconfont icon-checkmark-circle"></i>
+						<span class="name">保存</span>
+					</li>
+				</el-tooltip>
+				<el-tooltip effect="dark" content="新页面编辑" placement="right">
+					<li class="jb-all bg-cb edit no-number" v-if="isAuthor">
+						<a :href="'/write/'+articleId">
+							<i class="iconfont icon-bianji"></i>
+							<span class="name">编辑</span>
+						</a>
+					</li>
+				</el-tooltip>
+				<li class="jb-all bg-cb pinglun" @click="goComment">
+					<i class="iconfont icon-pinglun"></i>
+					<span class="name">评论</span>
+					<span class="number">{{commentLength}}</span>
+				</li>
+				<li class="jb-all bg-cb zan" @click="goZan">
+					<i class="iconfont icon-dianzan" ref="zan"></i>
+					<span class="name">赞</span>
+					<span class="number">{{zan}}</span>
+				</li>
+			</ul>
+		</div>
+		<div class="flex-menu-right">
+			<ul>
+				<li class="jb-all bg-cb top no-number" @click="goTop">
+					<i class="iconfont icon-huidaodingbu"></i>
+					<span class="name">Top</span>
+				</li>
+			</ul>
+		</div>
+		<BottomFooter></BottomFooter>
+		<ImgView ref="img-view"></ImgView>
+	</div>
 </template>
 
 <script>
@@ -251,7 +260,7 @@
         allArticleNum: noteContent.data.allArticleNum,
         allViews: noteContent.data.allViews,
         allViewsStr: noteContent.data.allViewsStr,
-        newNoteList: noteContent.data.newNoteList,
+        recommendList: noteContent.data.recommendList,
         userCommentAllNum: noteContent.data.userCommentAllNum,
         // 存储文章ID
         articleId: params.id,
@@ -367,24 +376,7 @@
         })
       },
       async publishEdit(id) {
-//        let preDom = $('pre')
-//        for (let item = 0; item < preDom.length; item++) {
-//          hljs.highlightBlock(preDom[item])
-//        }
-//         this.$store.dispatch('editNoteContent', {
-//           id: id, // 文章ID
-//           content: this.editDom.froalaEditor('html.get'), // 内容
-//         })
-//           .then(info => {
-//             this.$message.success('编辑文章成功，2秒后传送至文章内容~')
-//             window.location.href = `/article/${info.data.id}`
-//           })
-//           .catch(error => {
-//             this.$message.error('编辑文章失败')
-//           })
-
         console.log(this.editDom.froalaEditor('html.get'))
-
         const res = await this.$axios.post(`/api/biji/article/edit`, {
           allContent: {
             id: id, // 文章ID
@@ -393,14 +385,10 @@
         }).catch(error => {
           this.$message.error('编辑文章失败')
         })
-        // console.log(res)
-
         if (res.status === 200) {
           this.$message.success('编辑文章成功，2秒后传送至文章内容~')
           window.location.href = `/article/${res.data.id}`
         }
-
-
       },
 
       computerIndex(sTop) {
@@ -435,7 +423,6 @@
       },
       goAnchor(selector) {
         let anchor = this.$el.querySelector(`[anchor-id=${selector}]`)
-        // document.documentElement.scrollTop = anchor.offsetTop - 50
         window.scrollTo({
           top: anchor.offsetTop - 50,
           behavior: "smooth"
@@ -448,10 +435,6 @@
     },
     mounted() {
       this.$nextTick(() => {
-        // this.$on('change_comment_num', (num) => {
-        //   console.log(123123123)
-        //   this.commentNum(num)
-        // })
         // 如果是编辑
         if (this.inline === 'edit' && this.$route.name == 'article-id' && this.isAuthor === true) {
           this.realTimeEdit()
@@ -472,33 +455,49 @@
           SyntaxHighlighter.defaults['auto-links'] = false
           SyntaxHighlighter.all();
 
-          window.onscroll = () => {
-            if (this.scrollTop() > $('.fixed-box').offset().top - 60) {
-              $('.fixed-content').addClass('fixed')
-            } else {
-              $('.fixed-content').removeClass('fixed')
-            }
-//          // 防抖 提升性能
-            clearTimeout(this.selectLink)
-            this.selectLink = setTimeout(() => {
-              const data = this.computerIndex($(window).scrollTop())
-              if (data === undefined) {
-                $('.anchor-list li').removeClass('select')
-                return
+          // 锚点个数大于0
+          if (this.noteContent.anchorList.length > 0) {
+            window.onscroll = () => {
+              // const articleCommentTop = $('.article-comment').offset().top
+              const fixedBox = $('.fixed-box')
+              const fixedBoxTop = fixedBox.offset().top
+              const scrollTop = this.scrollTop()
+
+              if (scrollTop > fixedBoxTop - 60) {
+                $('.fixed-content').addClass('fixed')
+              } else {
+                $('.fixed-content').removeClass('fixed')
               }
 
-              $('.anchor-list li').removeClass('select')
-              $(`.${data.id}`).addClass('select')
-            }, 20)
+              // 防抖 提升性能
+              clearTimeout(this.selectLink)
+              this.selectLink = setTimeout(() => {
+                const data = this.computerIndex($(window).scrollTop())
+                if (data === undefined) {
+                  $('.anchor-list li').removeClass('select')
+                  return
+                }
+
+                $('.anchor-list li').removeClass('select')
+                $(`.${data.id}`).addClass('select')
+              }, 20)
+            }
           }
         }
         this.$refs.content.addEventListener('click', (ev) => {
           let eve = ev || window.event
           let target = eve.target || eve.srcElement
           if (target.nodeName.toLowerCase() === 'img') {
-//            console.log(target.getAttribute('src'))
             this.$refs['img-view'].open(target.getAttribute('src'))
           }
+        })
+				console.log(this.$refs['article-comment'])
+        this.$refs['article-comment'].$el.addEventListener('click', (ev) => {
+          let eve = ev || window.event
+          let target = eve.target || eve.srcElement
+					if (target.parentNode.nodeName.toLowerCase() === 'p' && target.nodeName.toLowerCase() === 'img') {
+            this.$refs['img-view'].open(target.getAttribute('src'))
+					}
         })
       })
       // window.previewImg = this.previewImg
@@ -506,413 +505,449 @@
   }
 </script>
 <style lang="less">
-  .preview-img.el-message-box {
-    width: inherit;
-    min-width: 300px;
-    min-height: 200px;
-  }
+	.preview-img.el-message-box {
+		width: inherit;
+		min-width: 300px;
+		min-height: 200px;
+	}
 
-  .article-content, .reply-edit {
-    ul {
-      list-style: inherit;
-      padding-left: 40px;
-      position: relative;
+	.article-content, .reply-edit {
+		ul {
+			list-style: inherit;
+			padding-left: 40px;
+			position: relative;
 
-      &:after {
-        position: absolute;
-        content: '\e601';
-        font-size: 12px;
-        left: 0;
-        top: 2px;
-        color: #f56c6c;
-        font-family: "iconfont" !important;
-        /*font-size: 16px;*/
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+			&:after {
+				position: absolute;
+				content: '\e601';
+				font-size: 12px;
+				left: 0;
+				top: 2px;
+				color: #f56c6c;
+				font-family: "iconfont" !important;
+				/*font-size: 16px;*/
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
 
-      li {
-        padding-bottom: 5px;
-      }
-    }
+			li {
+				padding-bottom: 5px;
+			}
+		}
 
-    ol {
-      position: relative;
+		ol {
+			position: relative;
 
-      &:after {
-        position: absolute;
-        content: '\e600';
-        font-size: 12px;
-        left: 0;
-        top: 2px;
-        color: #f56c6c;
-        font-family: "iconfont" !important;
-        /*font-size: 16px;*/
-        font-style: normal;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
+			&:after {
+				position: absolute;
+				content: '\e600';
+				font-size: 12px;
+				left: 0;
+				top: 2px;
+				color: #f56c6c;
+				font-family: "iconfont" !important;
+				/*font-size: 16px;*/
+				font-style: normal;
+				-webkit-font-smoothing: antialiased;
+				-moz-osx-font-smoothing: grayscale;
+			}
 
-      li {
-        padding-bottom: 5px;
-      }
-    }
-  }
+			li {
+				padding-bottom: 5px;
+			}
+		}
+	}
 
-  .article-content, .article-comment {
-    a[href] {
-      color: #333;
+	.content-style {
+		a[href] {
+			color: #333;
 
-      &:hover {
-        color: #ea6f5a;
-      }
-    }
+			&:hover {
+				color: #ea6f5a;
+			}
+		}
 
-    img {
-      max-width: 100%;
-      cursor: zoom-in !important;
-      /*cursor: url(../images/big.cur);*/
-    }
-  }
+		img {
+			max-width: 100%;
+			cursor: zoom-in !important;
+			/*cursor: url(../images/big.cur);*/
+		}
+	}
+
+	.article-content {
+		.content-style()
+	}
+	.article-comment {
+		.comment-list {
+			.comment {
+				.comment-wrap {
+					.content {
+						.content-style()
+					}
+				}
+				.sub-comment-list {
+					.sub-comment {
+						.content, .quote {
+							.content-style()
+						}
+					}
+				}
+			}
+		}
+	}
 </style>
 <style scoped lang="less">
-  .note {
-    position: relative;
-    padding-top: 56px;
-    width: 1220px;
-    margin: 0 auto;
-    display: flex;
+	.article-page {
+		background: #f4f5f5;
+	}
 
-    .post {
-      width: 880px;
-      padding-right: 20px;
+	.note {
+		position: relative;
+		padding-top: 70px;
+		width: 1200px;
+		margin: 0 auto;
+		display: flex;
+		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+		border-radius: 2px;
 
-      .article {
+		.post {
+			width: 880px;
+			padding: 0 20px;
+			background: #ffffff;
+
+			.article {
+				.title {
+					word-break: break-all;
+					margin: 20px 0 0;
+					font-family: -apple-system, SF UI Display, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
+					font-size: 34px;
+					font-weight: 700;
+					line-height: 1.3;
+				}
+
+				.info-content {
+					display: flex;
+					position: relative;
+					padding: 15px 0 25px 0;
+					margin-bottom: 30px;
+					font-size: 14px;
+
+					&:after {
+						display: block;
+						right: 0;
+						bottom: 0;
+						left: 0;
+						height: .0625rem;
+						background: #ececec;
+						content: '';
+						position: absolute;
+					}
+
+					span {
+						position: relative;
+						padding-right: 14px;
+						color: #bbb;
+
+						&:after {
+							position: absolute;
+							display: block;
+							width: 3px;
+							height: 3px;
+							border-radius: 50%;
+							top: 50%;
+							right: 4px;
+							margin-top: -1px;
+							background: #ccc;
+							content: '';
+						}
+
+						&:last-child {
+							&:after {
+								content: '';
+								width: 0px;
+								height: 0px;
+							}
+						}
+					}
+				}
+
+				.show-content {
+					color: #2f2f2f;
+					word-break: break-all;
+					font-size: 16px;
+					font-weight: 400;
+					line-height: 1.7;
+
+					.describe {
+						padding-bottom: 40px;
+					}
+				}
+			}
+		}
+
+		.other-info {
+			width: 320px;
+			background: #f4f5f5;
+			margin-left: 20px;
+
+			.author-info {
+				display: flex;
+				flex-direction: column;
+        background: #ffffff;
+        border-radius: 2px;
+        margin-bottom: 20px;
         .title {
-          word-break: break-all;
-          margin: 20px 0 0;
-          font-family: -apple-system, SF UI Display, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, WenQuanYi Micro Hei, sans-serif;
-          font-size: 34px;
-          font-weight: 700;
-          line-height: 1.3;
+          font-size: 14px;
+          border-bottom: 1px solid hsla(0,0%,58.8%,.1);
+          padding: 15px;
         }
 
-        .info-content {
+        .author-box {
           display: flex;
-          position: relative;
-          padding: 15px 0 25px 0;
-          margin-bottom: 30px;
-          font-size: 14px;
-
-          &:after {
-            display: block;
-            right: 0;
-            bottom: 0;
-            left: 0;
-            height: .0625rem;
-            background: #ececec;
-            content: '';
-            position: absolute;
-          }
-
-          span {
-            position: relative;
-            padding-right: 14px;
-            color: #bbb;
-
-            &:after {
-              position: absolute;
-              display: block;
-              width: 3px;
-              height: 3px;
+          padding: 15px;
+          .author-avatar {
+            a {
+              width: 50px;
+              height: 50px;
+              background: rgba(234, 234, 234, .6);
+              box-shadow: 0 2px 2px 2px rgba(0, 34, 77, 0.1);
               border-radius: 50%;
-              top: 50%;
-              right: 4px;
-              margin-top: -1px;
-              background: #ccc;
-              content: '';
-            }
-
-            &:last-child {
-              &:after {
-                content: '';
-                width: 0px;
-                height: 0px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-right: 15px;
+              img {
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
               }
             }
           }
-        }
 
-        .show-content {
-          color: #2f2f2f;
-          word-break: break-all;
-          font-size: 16px;
-          font-weight: 400;
-          line-height: 1.7;
-
-          .describe {
-            padding-bottom: 40px;
+          .author-name {
+            font-size: 22px;
+            padding-top: 10px;
+            color: #333;
+            max-width: 195px;
+            padding-bottom: 20px;
           }
         }
-      }
-    }
 
-    .other-info {
-      width: 320px;
-      background: #f7f7f7;
-
-      .author-info {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding-top: 20px;
-
-        .author-avatar {
-          a {
-            width: 110px;
-            height: 110px;
-            background: rgba(234, 234, 234, .6);
-            box-shadow: 0 2px 2px 2px rgba(0, 34, 77, 0.1);
-            border-radius: 50%;
+        .num-box {
+          font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+          padding: 0 15px 15px 15px;
+          display: flex;
+          align-items: center;
+          b {
+            font-weight: 100;
+            font-size: 20px;
+            color: #212529;
+          }
+          span {
+            color: #6c757d;
+            font-size: 16px;
+            margin-right: 10px;
+          }
+          div {
             display: flex;
             justify-content: center;
             align-items: center;
-            img {
-              border-radius: 50%;
-              width: 110px;
-              height: 110px;
+            width: 20px;
+            height: 20px;
+            background: #E1EFFF;
+            border-radius: 10px;
+            margin-right: 10px;
+            i {
+              font-size: 12px;
+              color: #7BB9FF;
             }
           }
         }
+			}
 
-        .author-name {
-          font-size: 24px;
-          padding-top: 10px;
-          color: #333;
-          padding-bottom: 20px;
+			.fixed-box {
+				.fixed-content {
+					background: #f7f7f7;
+
+					&.fixed {
+						position: fixed;
+						top: 60px;
+						width: 320px;
+					}
+
+					.anchor-list {
+						display: flex;
+						flex-direction: column;
+						position: relative;
+            font-size: 14px;
+
+						&:before {
+							content: ' ';
+							position: absolute;
+							top: 0;
+							left: 20px;
+							bottom: 0;
+							width: 2px;
+							background-color: #ebedef;
+							opacity: .5;
+						}
+
+						/*padding-left: 20px;*/
+
+						li {
+							padding: 5px 0;
+							position: relative;
+
+							&.h1 {
+								padding-left: 30px;
+								font-weight: bold;
+
+								a {
+									&:before {
+										left: -12px;
+										margin-top: -3px;
+										width: 6px;
+										height: 6px;
+									}
+								}
+							}
+
+							&.h2 {
+								padding-left: 45px;
+							}
+
+							&.h3 {
+								padding-left: 60px;
+							}
+
+							&.h4 {
+								padding-left: 70px;
+							}
+
+							&.h5 {
+								padding-left: 80px;
+							}
+
+							&.h6 {
+								padding-left: 90px;
+							}
+
+							&:hover {
+								cursor: pointer;
+								background-color: #ebedef
+							}
+
+							&.select {
+								background-color: #ebedef;
+
+								a {
+									color: #007fff;
+								}
+							}
+
+							a {
+								position: relative;
+
+								&:before {
+									content: ' ';
+									position: absolute;
+									top: 50%;
+									left: -10px;
+									margin-top: -2px;
+									width: 4px;
+									height: 4px;
+									background-color: currentColor;
+									border-radius: 50%;
+								}
+							}
+
+						}
+					}
+				}
+			}
+
+			h5 {
+				font-weight: 500;
+				font-size: 16px;
+				position: relative;
+				padding-left: 20px;
+				margin-bottom: 15px;
+				margin-top: 0;
+
+				&:after {
+					display: block;
+					top: 0;
+					bottom: 0;
+					left: 0;
+					width: .3125rem;
+					height: 100%;
+					background: #0366d6;
+					content: '';
+					position: absolute;
+				}
+			}
+
+			.recommend-list {
+        background: #ffffff;
+        margin-bottom: 20px;
+        .title {
+          font-size: 14px;
+          border-bottom: 1px solid hsla(0,0%,58.8%,.1);
+          padding: 15px;
         }
+				ul {
+          padding: 15px 0;
+					li {
+						padding: 0 15px;
+						display: flex;
+						margin-bottom: 15px;
 
-        .countbar {
-          font-family: -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, "Microsoft YaHei", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-          display: flex;
-          margin-bottom: 50px;
+						a {
+							display: flex;
+							width: 100%;
+							color: #333;
 
-          .articles, .views {
-            width: 150px;
-            display: flex;
-            align-items: center;
-            flex-direction: column;
+							.img-box {
+								background: rgba(234, 234, 234, .6);
+								box-shadow: 0 1px 1px 1px rgba(0, 34, 77, 0.1);
+								width: 80px;
+								height: 45px;
+								border-radius: 3px;
+								display: flex;
+								justify-content: center;
+								align-items: center;
 
-            b {
-              font-weight: 100;
-              padding-bottom: 5px;
-              font-size: 32px;
-              color: #212529;
-            }
+								img {
+									width: 80px;
+									height: 45px;
+									border-radius: 3px;
+									box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);
 
-            span {
-              color: #6c757d;
-              font-size: 14px;
-            }
-          }
+								}
+							}
 
-          .views {
-            position: relative;
+							span {
+								width: 100%;
+								display: -webkit-box;
+								-webkit-box-orient: vertical;
+								-webkit-line-clamp: 2;
+								overflow: hidden;
+								font-size: 14px;
+								line-height: 22px;
+								margin-right: 10px;
+							}
 
-            &:after {
-              top: 0;
-              left: 0;
-              height: 100%;
-              width: 1px;
-              background: #ccc;
-              content: '';
-              position: absolute;
-            }
-          }
-        }
-      }
+							&:hover {
+								color: #ea6f5a;
+							}
 
-      .fixed-box {
-        .fixed-content {
-          background: #f7f7f7;
-          &.fixed {
-            position: fixed;
-            top: 60px;
-            width: 320px;
-          }
-          h5 {
-            font-weight: 500;
-            font-size: 18px;
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 15px;
-            margin-top: 0;
-
-            &:after {
-              display: block;
-              top: 0;
-              bottom: 0;
-              left: 0;
-              width: .3125rem;
-              height: 100%;
-              background: #0366d6;
-              content: '';
-              position: absolute;
-            }
-          }
-          .anchor-list {
-            display: flex;
-            flex-direction: column;
-            position: relative;
-
-            &:before {
-              content: ' ';
-              position: absolute;
-              top: 0;
-              left: 20px;
-              bottom: 0;
-              width: 2px;
-              background-color: #ebedef;
-              opacity: .5;
-            }
-
-            /*padding-left: 20px;*/
-            li {
-              padding: 5px 0;
-              position: relative;
-              &.h1 {
-                padding-left: 30px;
-                font-weight: bold;
-                a {
-                  &:before {
-                    left: -12px;
-                    margin-top: -3px;
-                    width: 6px;
-                    height: 6px;
-                  }
-                }
-              }
-              &.h2 {
-                padding-left: 45px;
-              }
-              &.h3 {
-                padding-left: 60px;
-              }
-              &.h4 {
-                padding-left: 70px;
-              }
-              &.h5 {
-                padding-left: 80px;
-              }
-              &.h6 {
-                padding-left: 90px;
-              }
-              &:hover {
-                cursor: pointer;
-                background-color: #ebedef
-              }
-              &.select {
-                background-color: #ebedef;
-                a {
-                  color: #007fff;
-                }
-              }
-              a {
-                position: relative;
-                &:before {
-                  content: ' ';
-                  position: absolute;
-                  top: 50%;
-                  left: -10px;
-                  margin-top: -2px;
-                  width: 4px;
-                  height: 4px;
-                  background-color: currentColor;
-                  border-radius: 50%;
-                }
-              }
-
-            }
-          }
-        }
-      }
-
-      /*.list {*/
-      /*display: flex;*/
-      /*flex-direction: column;*/
-
-      /*h5 {*/
-      /*font-weight: 500;*/
-      /*font-size: 18px;*/
-      /*position: relative;*/
-      /*padding-left: 20px;*/
-      /*margin-bottom: 15px;*/
-      /*margin-top: 0;*/
-
-      /*&:after {*/
-      /*display: block;*/
-      /*top: 0;*/
-      /*bottom: 0;*/
-      /*left: 0;*/
-      /*width: .3125rem;*/
-      /*height: 100%;*/
-      /*background: #0366d6;*/
-      /*content: '';*/
-      /*position: absolute;*/
-      /*}*/
-      /*}*/
-
-      /*ul {*/
-      /*li {*/
-      /*padding: 0 20px;*/
-      /*display: flex;*/
-      /*margin-bottom: 15px;*/
-
-      /*a {*/
-      /*display: flex;*/
-      /*width: 100%;*/
-      /*color: #333;*/
-
-      /*.img-box {*/
-      /*background: rgba(234, 234, 234, .6);*/
-      /*box-shadow: 0 1px 1px 1px rgba(0, 34, 77, 0.1);*/
-      /*width: 80px;*/
-      /*height: 45px;*/
-      /*border-radius: 3px;*/
-      /*display: flex;*/
-      /*justify-content: center;*/
-      /*align-items: center;*/
-      /*img {*/
-      /*width: 80px;*/
-      /*height: 45px;*/
-      /*border-radius: 3px;*/
-      /*box-shadow: 0 0.0625rem 0.1875rem 0 rgba(0, 34, 77, 0.1);*/
-
-      /*}*/
-      /*}*/
-
-      /*span {*/
-      /*width: 100%;*/
-      /*display: -webkit-box;*/
-      /*-webkit-box-orient: vertical;*/
-      /*-webkit-line-clamp: 2;*/
-      /*overflow: hidden;*/
-      /*font-size: 16px;*/
-      /*line-height: 22px;*/
-      /*margin-right: 10px;*/
-      /*}*/
-
-      /*&:hover {*/
-      /*color: #ea6f5a;*/
-      /*}*/
-
-      /*!*display: flex;*!*/
-      /*!*align-items: center;*!*/
-      /*}*/
-      /*}*/
-      /*}*/
-      /*}*/
-    }
-  }
+							/*display: flex;*/
+							/*align-items: center;*/
+						}
+					}
+				}
+			}
+		}
+	}
 </style>
