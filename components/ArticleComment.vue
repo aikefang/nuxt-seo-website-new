@@ -103,18 +103,9 @@
 				</div>
 			</div>
 		</div>
-		<div v-show="hasMore" class="pagination-box" @click="loadCommentList">查看更多</div>
-		<div v-show="!hasMore" class="pagination-box no-more">暂无更多~</div>
-<!--		<div class="pagination-box" v-show="total > 0">-->
-<!--			<el-pagination-->
-<!--				layout="prev, pager, next"-->
-<!--				prev-text="上一页"-->
-<!--				next-text="下一页"-->
-<!--				:page-size="pageSize"-->
-<!--				@current-change="pageSizeChange"-->
-<!--				:total="total">-->
-<!--			</el-pagination>-->
-<!--		</div>-->
+		<div v-show="hasMore && comment.length > 0" class="pagination-box" @click="loadCommentList">查看更多</div>
+		<div v-show="!hasMore && comment.length > 0" class="pagination-box no-more">暂无更多~</div>
+		<div v-show="!hasMore && comment.length === 0" class="pagination-box no-more">暂无评论~</div>
 	</div>
 </template>
 

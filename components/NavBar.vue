@@ -252,7 +252,7 @@
 
 		.width-limit {
 			min-width: 768px;
-			max-width: 1220px;
+			max-width: 1200px;
 			height: 46px;
 			margin: 0 auto;
 			display: flex;

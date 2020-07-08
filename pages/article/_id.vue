@@ -491,7 +491,6 @@
             this.$refs['img-view'].open(target.getAttribute('src'))
           }
         })
-				console.log(this.$refs['article-comment'])
         this.$refs['article-comment'].$el.addEventListener('click', (ev) => {
           let eve = ev || window.event
           let target = eve.target || eve.srcElement
@@ -500,7 +499,6 @@
 					}
         })
       })
-      // window.previewImg = this.previewImg
     },
   }
 </script>
@@ -608,7 +606,7 @@
 		width: 1200px;
 		margin: 0 auto;
 		display: flex;
-		box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);
+		/*box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .05);*/
 		border-radius: 2px;
 
 		.post {
@@ -768,7 +766,6 @@
 
 			.fixed-box {
 				.fixed-content {
-					background: #f7f7f7;
 
 					&.fixed {
 						position: fixed;
