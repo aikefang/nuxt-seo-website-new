@@ -4,9 +4,7 @@
 		<div class="collection">
 			<div class="row">
 				<div class="row-left">
-					<keep-alive>
-						<Slide></Slide>
-					</keep-alive>
+          <HotArticle></HotArticle>
 					<keep-alive>
 						<recommendContent></recommendContent>
 					</keep-alive>
@@ -35,7 +33,7 @@
   import Vue from 'vue'
   import Logo from '~/components/Logo.vue'
   import NavBar from "~/components/NavBar.vue";
-  import Slide from "~/components/Slide.vue";
+  import HotArticle from "~/components/HotArticle.vue";
   import bottomFooter from '~/components/Footer.vue'
   import recommendCollection from '~/components/RecommendCollection.vue'
   import recommendContent from '~/components/RecommendContent.vue'
@@ -62,7 +60,7 @@
     components: {
       Logo,
       NavBar,
-      Slide,
+      HotArticle,
       bottomFooter,
       recommendCollection,
       recommendContent,
@@ -71,22 +69,18 @@
     async asyncData({store, route, params, redirect, $axios}) {
       store.commit('global/setNavStatus', 'index')
       const [
-        bannerList,
+        hotArticleList,
         recommendCategoryList
       ] = await Promise.all([
-        $axios.get('/api/biji/banner/list', {
+        $axios.get('/api/biji/article/hotList', {
           params: {
             imageMogr2: true
           }
         }),
-        $axios.get('/api/biji/category/list', {
-          params: {
-            type: 'hot'
-          }
-        })
+        $axios.get('/api/biji/category/hotSearch')
       ])
-      if (bannerList.status === 200) {
-        store.commit('global/setBannerList', bannerList.data.list)
+      if (hotArticleList.status === 200) {
+        store.commit('global/setHotArticleList', hotArticleList.data.list)
       }
       if (recommendCategoryList.status === 200) {
         store.commit('global/setRecommendCategoryList', recommendCategoryList.data.list)

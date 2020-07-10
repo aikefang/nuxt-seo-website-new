@@ -1,15 +1,17 @@
 <template>
   <div class="recommend-collection">
-    <div class="title">热门分类</div>
+    <div class="title">
+      <span>热门分类</span>
+      <router-link :to="'category/'" class="more">
+        <div class="name">查看全部</div>
+      </router-link>
+    </div>
     <div class="content">
       <!--        <router-link :to="'category/'+item.parent+'/'+item._id" class="kid jb-all" v-for="item in global.recommendCategoryList" :key="item._id">-->
       <router-link :to="'category/' + item.parent.seo + '/' +item.seo + '/'" class="kid jb-all"
                    v-for="item in global.recommendCategoryList" :key="item._id">
         <!--<i class="iconfont icon-iconfonttag"></i>-->
         <div class="name">{{item.title}}</div>
-      </router-link>
-      <router-link :to="'category/'" class="kid jb-all more">
-        <div class="name">More</div>
       </router-link>
     </div>
   </div>
@@ -44,6 +46,14 @@
       font-size: 14px;
       border-bottom: 1px solid hsla(0, 0%, 58.8%, 0.1);
       padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      .more {
+        transition: all .2s;
+        &:hover {
+          color: #ea6f5a;
+        }
+      }
     }
 		.content {
       width: 340px;
@@ -70,19 +80,14 @@
         .name {
           display: inline-block;
           padding: 0 11px 0 11px;
-          font-size: 16px;
+          font-size: 14px;
           /*margin-left: 22px;*/
         }
 
         &:hover {
           background-color: #f0f0f0;
+          color: #ea6f5a;
         }
-      }
-
-      .more {
-        /*font-size: 16px;*/
-        /*min-height: 32px;*/
-        /*line-height: 32px;*/
       }
     }
 	}

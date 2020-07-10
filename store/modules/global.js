@@ -2,6 +2,7 @@ const state = () => {
   return {
     bannerList: [],
     navList: [],
+    hotArticleList: [],
     recommendCategoryList: [],
     userInfo: {},
     navStatus: 'index',
@@ -11,6 +12,9 @@ const state = () => {
 const mutations = {
   setBannerList: (state, list) => {
     state.bannerList = list
+  },
+  setHotArticleList: (state, list) => {
+    state.hotArticleList = list
   },
   setNavList: (state, list) => {
     state.navList = list
