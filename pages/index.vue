@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="index-page">
 		<navBar></navBar>
 		<div class="collection">
 			<div class="row">
@@ -97,28 +97,28 @@
 </script>
 
 <style scoped lang="less">
+	.index-page {
+		background: #f4f5f5;
+	}
 	.collection {
 		width: 1200px;
 		margin: 0 auto;
-		padding-top: 46px;
-
+		padding-top: 70px;
+		position: relative;
 		.row {
-			padding-top: 30px;
-
-			&:after {
-				content: "";
-				display: table;
-				clear: both;
-			}
+			display: flex;
+			justify-content: space-between;
 
 			.row-left {
-				float: left;
 				width: 840px;
+				padding: 20px 20px 30px 20px;
+				border-radius: 2px;
+				box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+				background: #ffffff;
 			}
 
 			.row-right {
-				float: right;
-				width: 340px;
+				align-self: flex-start;
 			}
 		}
 	}

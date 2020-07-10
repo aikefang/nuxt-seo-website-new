@@ -2,11 +2,11 @@
 	<div class="list-container">
 		<ul class="note-list">
 			<li v-for="item in article.articleList" :key="item.id" :class="{'have-img' : !!item.articleImageView != false}">
-				<a :href="'/article/' + item._id + '/'" :title="item.title" class="wrap-img" v-if="!!item.articleImageView != false">
+				<a :href="'/article/' + item._id + '/'" target="_blank" :title="item.title" class="wrap-img" v-if="!!item.articleImageView != false">
 					<img v-lazy="item.articleImageView2" :alt="item.title" class="img-blur-done lazy-img-fadein">
 				</a>
 				<div class="content">
-					<a :href="'/article/' + item._id + '/'" :title="item.title" class="title tof">{{ item.title }}</a>
+					<a :href="'/article/' + item._id + '/'" target="_blank" :title="item.title" class="title tof">{{ item.title }}</a>
 					<!--<div class="author">-->
 					<!--<a class="avatar">-->
 					<!--<img :src="item.headImg" alt="">-->
@@ -305,7 +305,7 @@
 		.load-more {
 			cursor: pointer;
 			height: 40px;
-			margin: 30px auto 60px;
+			margin: 30px auto 20px;
 			padding: 10px 15px;
 			font-size: 15px;
 			color: #ea6f5a;

@@ -1,10 +1,10 @@
 <template>
-  <div>
-    <NavBar></NavBar>
-    <div class="content-main">
-      <div class="note-content">
-        <div class="column-left">
-          <div style="padding: 20px">
+  <div class="category-page">
+    <div class="category-content">
+      <NavBar></NavBar>
+      <div class="content-main">
+        <div class="note-content">
+          <div class="column-left">
             <h3 class="titlebar">笔记</h3>
             <div class="cat-nav-area">
               <dl class="cat-nav cat-bg cat-primarybright">
@@ -54,7 +54,6 @@
                 </dd>
               </dl>
             </div>
-
             <div class="note-category boxs">
               <div class="article-empty" v-show="list.length <= 0">
                 <i class="iconfont icon-kong"></i>
@@ -105,18 +104,17 @@
                 <span>暂无更多~</span>
               </div>
             </div>
-
           </div>
         </div>
       </div>
-    </div>
-    <div class="flex-menu-right">
-      <ul>
-        <li class="jb-all bg-cb top no-number" @click="goTop">
-          <i class="iconfont icon-huidaodingbu"></i>
-          <span class="name">Top</span>
-        </li>
-      </ul>
+      <div class="flex-menu-right">
+        <ul>
+          <li class="jb-all bg-cb top no-number" @click="goTop">
+            <i class="iconfont icon-huidaodingbu"></i>
+            <span class="name">Top</span>
+          </li>
+        </ul>
+      </div>
     </div>
     <BottomFooter></BottomFooter>
   </div>
@@ -425,12 +423,20 @@
     }
   }
 </script>
-<style>
-  body {
-    min-width: 1100px;
-  }
-</style>
 <style scoped lang="less">
+  .category-page {
+    background: #f4f5f5;
+    overflow: hidden;
+    .category-content {
+      border-radius: 2px;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,.05);
+      background: #ffffff;
+      min-width: 1000px;
+      width: 1200px;
+      margin: 70px auto 0 auto;
+      padding: 20px;
+    }
+  }
   .article-empty {
     height: 80px;
     display: flex;
@@ -483,10 +489,8 @@
   }
 
   .content-main {
-    min-width: 1000px;
-    width: 1200px;
-    margin: 0 auto;
-    padding-top: 46px;
+
+    /*padding-top: 46px;*/
   }
 
   .note-content {
@@ -496,7 +500,7 @@
     width: inherit !important;
     overflow: hidden;
     /*min-width: 710px;*/
-    background-color: #fafafa;
+    /*background-color: #fafafa;*/
   }
 
   .column-left {

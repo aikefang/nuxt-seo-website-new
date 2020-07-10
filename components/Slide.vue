@@ -35,7 +35,7 @@
         position: relative;
         /*background-color: #d3dce6;*/
         background: rgba(234,234,234, .6);
-        width: 840px;
+        width: 800px;
         height: 300px;
         .el-carousel__item {
             a {

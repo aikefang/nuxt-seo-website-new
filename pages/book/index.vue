@@ -566,8 +566,8 @@
 </script>
 <style scoped lang="less">
 	.book {
-		background-color: #f9f9f9;
-		padding-top: 56px;
+		background-color: #f4f5f5;
+		padding-top: 46px;
 
 		.upload-book-box {
 			display: flex;
@@ -654,7 +654,7 @@
 	.book-page {
 		width: 1200px;
 		margin: 0 auto;
-		padding-top: 30px;
+		padding-top: 20px;
 		display: flex;
 
 		ul {
