@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- 移动端适配 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>亲爱的，我陪你到永远！</title>
+    <!-- <script src=""></script> -->
+    <script src="js/jquery-1.9.1.js"></script>
+    <!-- <link href="" rel="stylesheet"> -->
+    <style>
+        .love{
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 2em;
+            padding-bottom: 2em;
+        }
+        .loveImg{
+            /*background-image: url('love.jpg');*/
+            background-repeat: no-repeat;
+            background-position: center;
+            /*background-size:100% auto;*/
+            width: 80%;
+            height: auto;
+        }
+        .marAuto{
+            margin: 0 auto;
+            text-align: center;
+            padding-bottom: 5px;
+        }
+        .col{
+            color: #3c3c3c;
+        }
+        .colN{
+            color: rgb(246,153,180);
+        }
+    </style>
+</head>
+<body class="col">
+<div class="love" id="love" style="">
+    <img class="loveImg" src="love.jpg" alt="">
+</div>
+<div class="marAuto">
+    <span>我们从
+        <span class="colN">2012年01月15日</span>
+        恋爱</span>
+</div>
+<!--天-->
+<div class="marAuto">
+    <span>共同度过了 </span>
+    <span id="days" class="colN"></span><span class="colN">天 </span>
+    <span>的美好时光...</span>
+</div>
+<!--小时-->
+<div class="marAuto">
+    <span>在这 </span>
+    <span id="allHour" class="colN"></span><span class="colN">小时 </span>
+    <span>里，我们彼此爱着对方...</span>
+</div>
+<!--分钟-->
+<div class="marAuto">
+    <span>在这 </span>
+    <span id="allMinute" class="colN"></span><span class="colN">分钟 </span>
+    <span>里，我们彼此想念...</span>
+</div>
+<!--秒-->
+<div class="marAuto">
+    <span>在这 </span>
+    <span id="allSecond" class="colN"></span><span class="colN">秒 </span>
+    <span>里，我们彼此相互依靠...</span>
+</div>
+<!--年月日-->
+<div class="marAuto">
+    <span>仔细算来一共</span>
+    <span class="colN">
+        <span class="YMD_y"></span>年<span class="YMD_m"></span>个月<span class="YMD_d"></span>天</span>
+    <span>！！！</span>
+</div>
+<!--年月日时分秒-->
+<div class="marAuto">
+    <span>精确的说一共</span>
+    <span class="colN">
+        <span class="YMD_y"></span>年<span class="YMD_m"></span>个月<span class="YMD_d"></span>天<span class="allDHMS_h"></span>小时<span class="allDHMS_m"></span>分<span class="allDHMS_s"></span>秒
+    </span>
+    <span>！</span>
+</div>
+<div class="marAuto">
+    <span>亲爱的，我陪你到永远！</span>
+</div>
+<script>
+    (function (winodw) {
+        var u = function () {
+
+        };
+        u.timeObj = {};
+        u.p = function(i) {
+            return Math.floor(i / 10) + "" + i % 10;
+        };
+        u.trunc = function(i) {
+            var j = Math.round(i * 100);
+            return Math.floor(j / 100) + (j % 100 > 0 ? "." + this.p(j % 100) : "");
+        };
+        u.getYearMonthDayDate = function(beforeData,nowData){//获取年月日
+            var fixDate = function(sDate){
+                var aD = sDate.split('-');
+                for(var i = 0; i < aD.length; i++){
+                    aD[i] = fixZero(parseInt(aD[i]));
+                }
+                return aD.join('-');
+            };
+            var fixZero = function(n){
+                return n < 10 ? '0'+n : n;
+            };
+            var fixInt = function(a){
+                for(var i = 0; i < a.length; i++){
+                    a[i] = parseInt(a[i]);
+                }
+                return a;
+            };
+            var getMonthDays = function(y,m){
+                var aMonthDays = [0,31,28,31,30,31,30,31,31,30,31,30,31];
+                if((y%400 == 0) || (y%4==0 && y%100!=0)){
+                    aMonthDays[2] = 29;
+                }
+                return aMonthDays[m];
+            };
+            var checkDate = function(sDate){
+            };
+            var y = 0;
+            var m = 0;
+            var d = 0;
+            var sTmp;
+            var aTmp;
+            var sDate1 = fixDate(beforeData);
+            var sDate2 = fixDate(nowData);
+            if(sDate1 > sDate2){
+                sTmp = sDate2;
+                sDate2 = sDate1;
+                sDate1 = sTmp;
+            }
+            var aDate1 = sDate1.split('-');
+            aDate1 = fixInt(aDate1);
+            var aDate2 = sDate2.split('-');
+            aDate2 = fixInt(aDate2);
+            //计算相差的年份
+            /*aTmp = [aDate1[0]+1,fixZero(aDate1[1]),fixZero(aDate1[2])];
+             while(aTmp.join('-') <= sDate2){
+             y++;
+             aTmp[0]++;
+             }*/
+            y = aDate2[0] - aDate1[0];
+            if( sDate2.replace(aDate2[0],'') < sDate1.replace(aDate1[0],'')){
+                y = y - 1;
+            }
+            //计算月份
+            aTmp = [aDate1[0]+y,aDate1[1],fixZero(aDate1[2])];
+            while(true){
+                if(aTmp[1] == 12){
+                    aTmp[0]++;
+                    aTmp[1] = 1;
+                }else{
+                    aTmp[1]++;
+                }
+                if(([aTmp[0],fixZero(aTmp[1]),aTmp[2]]).join('-') <= sDate2){
+                    m++;
+                } else {
+                    break;
+                }
+            }
+            //计算天数
+            aTmp = [aDate1[0]+y,aDate1[1]+m,aDate1[2]];
+            if(aTmp[1] > 12){
+                aTmp[0]++;
+                aTmp[1] -= 12;
+            }
+            while(true){
+                if(aTmp[2] == getMonthDays(aTmp[0],aTmp[1])){
+                    aTmp[1]++;
+                    aTmp[2] = 1;
+                } else {
+                    aTmp[2]++;
+                }
+                sTmp = ([aTmp[0],fixZero(aTmp[1]),fixZero(aTmp[2])]).join('-');
+                if(sTmp <= sDate2){
+                    d++;
+                } else {
+                    break;
+                }
+            }
+            this.timeObj.YMD = {
+                year:y,
+                month:m,
+                day:d
+            };
+//            return {y:y,m:m,d:d};
+        };
+        //
+        u.calculate = function(beforeData,nowData) {//开始时间 结束时间
+            var sec = nowData.getTime() - beforeData.getTime();
+            if (isNaN(sec)) {
+                alert("输入日期或时间的格式不正确，请进行检查，重新修改输入!");
+                return;
+            }
+            if (sec < 0){//如果先后顺序输入错误，交换减数与被减数
+                sec = nowData.getTime() - beforeData.getTime();
+            }
+            //  1秒             1分钟                  一小时             一天
+            var second = 1000, minute = 60 * second, hour = 60 * minute, day = 24 * hour;
+//            this.timeObj.allHour = this.trunc(sec / hour);
+            this.timeObj.allHour = parseInt(this.trunc(sec / hour));//取整输
+//            this.timeObj.allMinute = this.trunc(sec / minute);
+            this.timeObj.allMinute = parseInt(this.trunc(sec / minute));
+//            this.timeObj.allSecond = this.trunc(sec / second);
+            this.timeObj.allSecond = parseInt(this.trunc(sec / second));
+            var days = Math.floor(sec / day);
+            sec -= days * day;
+            var hours = Math.floor(sec / hour);
+            sec -= hours * hour;
+            var minutes = Math.floor(sec / minute);
+            sec -= minutes * minute;
+            var seconds = Math.floor(sec / second);
+            this.timeObj.allDHMS = {
+                days:days,
+                hours:hours,
+                minutes:minutes,
+                seconds:seconds
+            };
+//            $("#re").html( days + " 天" + (days != 1 ? "" : "") + ", " + hours + " 小时" + (hours != 1 ? "" : "") + ", " + minutes + " 分" + (minutes != 1 ? "" : "") + ", " + seconds + " 秒" + (seconds != 1 ? "" : ""));
+
+            var aa = beforeData.getFullYear()+"-"+(beforeData.getMonth()+1)+"-"+beforeData.getDate();//开始时间
+            var bb = nowData.getFullYear()+"-"+(nowData.getMonth()+1)+"-"+nowData.getDate();//结束时间
+            this.getYearMonthDayDate(aa,bb);
+            return this.timeObj;
+        };
+
+        u.getDate = function (beforeData,nowData) {
+            u.calculate(beforeData,nowData);
+//            u.getYearMonthDayDate(beforeData,nowData);
+        };
+        winodw.$kyle = u;
+    })(window);
+
+
+    love();
+    function love(){
+        var nowData =new Date();
+        var temp = "2012-01-15" + " " + "00:00:00";
+        temp = temp.replace("-", "/");
+        temp = temp.replace("-", "/");
+        var beforeData =new Date(temp);
+        var loveU = $kyle.calculate(beforeData,nowData);
+        $("#days").html(loveU.allDHMS.days);
+        $("#allHour").html(loveU.allHour);
+        $("#allMinute").html(loveU.allMinute);
+        $("#allSecond").html(loveU.allSecond);
+        $(".YMD_y").html(loveU.YMD.year);
+        $(".YMD_m").html(loveU.YMD.month);
+        $(".YMD_d").html(loveU.YMD.day);
+        $(".allDHMS_h").html(loveU.allDHMS.hours);
+        $(".allDHMS_m").html(loveU.allDHMS.minutes);
+        $(".allDHMS_s").html(loveU.allDHMS.seconds);
+        setTimeout("love()",1000);
+    }
+</script>
+</body>
+</html>
