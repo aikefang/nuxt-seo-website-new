@@ -254,13 +254,13 @@
         }
       })
 
-      document.addEventListener('click', (e) => {
-        let eve = e || window.event
-        let target = eve.target || eve.srcElement
-        if (target.getAttribute('data-type') !== 'menu' && this.menuShow) {
-          this.menuShow = false
-        }
-      })
+      // document.addEventListener('click', (e) => {
+      //   let eve = e || window.event
+      //   let target = eve.target || eve.srcElement
+      //   if (target.getAttribute('data-type') !== 'menu' && this.menuShow) {
+      //     this.menuShow = false
+      //   }
+      // })
     }
   })
 </script>
