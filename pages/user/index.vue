@@ -22,13 +22,26 @@
 				</div>
 			</div>
 			<div class="right-area">
-<!--				<div class="other-info">-->
-<!--					456456-->
-<!--				</div>-->
 				<div class="other-info">
 					<div class="item">
 						<span>加入于</span>
 						<span>{{ info.cTime | Format('yyyy-MM-dd') }}</span>
+					</div>
+					<div class="item">
+						<span>文章数</span>
+						<span>{{ info.articleCount}}</span>
+					</div>
+					<div class="item">
+						<span>今日浏览量</span>
+						<span>{{ info.todayViews}}</span>
+					</div>
+					<div class="item">
+						<span>昨日浏览量</span>
+						<span>{{ info.yesterdayViews}}</span>
+					</div>
+					<div class="item">
+						<span>总浏览量</span>
+						<span>{{ info.allViews}}</span>
 					</div>
 				</div>
 			</div>
@@ -42,7 +55,7 @@
     name: "index",
     async asyncData({store, route, params, redirect, $axios}) {
       const res = await $axios.get('/api/user/baseInfo')
-			console.log(res)
+			// console.log(res)
       return {
         info: res.data.info
 			}
