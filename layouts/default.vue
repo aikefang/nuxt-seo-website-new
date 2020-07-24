@@ -103,21 +103,21 @@
     height: 0;
   }
 
-  mark {
-    background: #ff0;
-    color: #000;
-  }
+  /*mark {*/
+  /*  background: #ff0;*/
+  /*  color: #000;*/
+  /*}*/
 
-  code, kbd, pre, samp {
-    font-family: monospace, serif;
-    font-size: 1em;
-  }
+  /*code, kbd, pre, samp {*/
+  /*  font-family: monospace, serif;*/
+  /*  font-size: 1em;*/
+  /*}*/
   ul {
     list-style: none;
     margin: 0;
     padding: 0;
   }
-  pre {
+  .write-conter pre, .article-content pre, .article-comment pre {
     white-space: pre-wrap;
     position: relative;
     margin-bottom: 24px;
