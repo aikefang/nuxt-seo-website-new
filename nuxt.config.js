@@ -49,6 +49,10 @@ module.exports = {
     '@/plugins/axios',
     '@/plugins/vue-filter',
     '@/plugins/mixins',
+    {
+      src: '@/plugins/lazyload', ssr: false
+    },
+
   ],
   /*
   ** Nuxt.js dev-modules
