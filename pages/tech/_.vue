@@ -134,6 +134,10 @@
 			position: relative;
 			margin: 0 auto;
 
+			.image-container-fill {
+				background: #f2f2f2;
+			}
+
 			.image-view {
 				position: absolute;
 				top: 0;
