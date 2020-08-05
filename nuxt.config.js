@@ -49,8 +49,9 @@ module.exports = {
     '@/plugins/axios',
     '@/plugins/vue-filter',
     '@/plugins/mixins',
+    // '@/plugins/lazyload'
     {
-      src: '@/plugins/lazyload', ssr: false
+      src: '~/plugins/lazyload', ssr: false
     },
 
   ],
@@ -110,7 +111,7 @@ module.exports = {
   */
   build: {
     transpile: [/^element-ui/],
-    extractCSS: {allChunks: true},
+    // extractCSS: {allChunks: true},
     // cdn 上传路径
     publicPath: `https://static.webascii.cn/webascii/business/${timeStamp}/`,
     /*
@@ -137,7 +138,8 @@ module.exports = {
     filenames: {
       app: ({isDev}) => isDev ? '[name].js' : '[name]-[chunkhash:6].js',
       chunk: ({isDev}) => isDev ? '[name].js' : '[name]-[chunkhash:6].js'
-    }
+    },
+    vendor:['vue-lazyload'],
   },
   router: {
     middleware: 'redirect',
