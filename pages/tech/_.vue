@@ -18,7 +18,7 @@
           rel: 'stylesheet',
           href: 'https://static.webascii.cn/webascii/mavon-editor/highlightjs/styles/github.min.css'
         },
-        {rel: 'stylesheet', href: 'https://cdn.bootcss.com/github-markdown-css/2.10.0/github-markdown.min.css'},
+        {rel: 'stylesheet', href: 'https://static.webascii.cn/webascii/mavon-editor/markdown/github-markdown.min.css'},
       ]
 
       return {
