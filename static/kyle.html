@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>love</title>
+  <link rel="stylesheet" href="https://static.webascii.cn/video-js/video-js.min.css">
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+    }
+    video {
+      object-fit: fill;
+    }
+    video::-internal-media-controls-download-button {
+      display:none;
+    }
+
+    video::-webkit-media-controls-enclosure {
+      overflow:hidden;
+    }
+
+    video::-webkit-media-controls-panel {
+      width: calc(100% + 30px); /* Adjust as needed */
+    }
+  </style>
+</head>
+<body>
+<!--x5-video-player-fullscreen="true"-->
+<!--x5-video-player-type="h5"-->
+<video
+  id="my-player"
+  class="video-js vjs-big-play-centered vjs-fluid"
+  controls
+  width="1920"
+  height="1080"
+  loop="true"
+  controlsList="nodownload"
+  x-webkit-airplay="true"
+  preload="metadata"
+  playsinline="true"
+  x5-playsinline="true"
+  webkit-playsinline="true"
+
+  poster="https://static.webascii.cn/love/min2/v111111.jpg?imageMogr2/auto-orient/strip/format/jpg/interlace/1/quality/80"
+  data-setup="{}">
+  <!--<source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">-->
+  <!--<source src="http://vjs.zencdn.net/v/oceans.webm" type="video/webm">-->
+  <!--<source src="http://vjs.zencdn.net/v/oceans.ogv" type="video/ogg">-->
+  <source type="application/x-mpegURL" src="https://static.webascii.cn/love/min2/love-m3u8.m3u8">
+  <p class="vjs-no-js">
+
+  </p>
+</video>
+
+<script src="https://static.webascii.cn/video-js/video.min.js"></script>
+<script src="https://static.webascii.cn/video-js/zh-CN.js"></script>
+  <script type="text/javascript">
+//    var myPlayer = videojs('my-player');
+//    videojs("my-player").ready(function(){
+//      console.log(123)
+//      var myPlayer = this;
+//      myPlayer.play();
+//    });
+var player = videojs('my-player', { fluid: true }, function () {
+  console.log('Good to go!');
+  this.play(); // if you don't trust autoplay for some reason
+})
+  </script>
+</body>
+</html>
