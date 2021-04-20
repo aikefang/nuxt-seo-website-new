@@ -1,6 +1,8 @@
 /*
 ** 只在生成模式的客户端中使用
 */
+console.log('process.BROWSER_BUILD:' + process.BROWSER_BUILD)
+console.log('process.env.NODE_ENV:' + process.env.NODE_ENV)
 if (process.BROWSER_BUILD && process.env.NODE_ENV === 'production') {
   /*
   ** Google 统计分析脚本
