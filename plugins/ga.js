@@ -39,7 +39,11 @@ export default ({ app: { router }, store }) => {
     /*
      ** 告诉 GA 增加一个 PV
      */
-    ga('set', 'page', to.fullPath)
-    ga('send', 'pageview')
+    try {
+      ga('set', 'page', to.fullPath)
+      ga('send', 'pageview')
+    } catch (e) {
+      console.log('dev')
+    }
   })
 }
