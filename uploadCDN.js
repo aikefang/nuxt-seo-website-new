@@ -13,9 +13,9 @@ function getIPAdress() {
 }
 let config = {}
 if (getIPAdress() == '172.17.78.211') { // 服务器
-  config = require('/home/wwwroot/global-config.js')
+  config = require('/home/wwwroot/global-config/prod-config.js')
 } else { // 本地
-  config = require('/Users/kyle/global-config/global-config.js')
+  config = require('/Users/kyle/global-config/local-config.js')
 }
 let qiniuTool = require('qiniu-tool')
 let fs = require('fs')
