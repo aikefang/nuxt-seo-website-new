@@ -12,7 +12,7 @@ function getIPAdress() {
   }
 }
 let config = {}
-if (getIPAdress() == '172.30.253.123') { // 服务器
+if (getIPAdress() == '172.17.78.211') { // 服务器
   config = require('/home/wwwroot/global-config/prod-config.js')
 } else { // 本地
   config = require('/Users/kyle/global-config/local-config.js')

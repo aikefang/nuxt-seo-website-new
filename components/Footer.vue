@@ -37,7 +37,7 @@
 				<div>
           版权所有Copyright 2016-{{ new Date().getFullYear() }}, All Rights Reserved <a class="jb-all"
                                                                                     rel="nofollow"
-                                                                                    href="http://www.miitbeian.gov.cn/">鲁ICP备15001470号</a>
+                                                                                    href="https://beian.miit.gov.cn/">鲁ICP备15001470号</a>
         </div>
         <a href="/sitemap.html" title="网站地图">网站地图</a>
 			</div>
