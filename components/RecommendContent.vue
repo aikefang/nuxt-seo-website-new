@@ -22,12 +22,14 @@
 					</div>
 				</div>
 				<div class="meta">
-					<router-link
-            :to="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'"
-            :title="item.levelFirst.title + '_' + item.levelSecond.title + '技术文档'"
-            class="collection-tag">
-						{{ item.levelSecond.title }}
-					</router-link>
+					<template v-if="item.levelFirst && item.levelFirst.seo && item.levelSecond && item.levelSecond.seo">
+            <router-link
+              :to="'/category/' + item.levelFirst.seo + '/' + item.levelSecond.seo + '/'"
+              :title="item.levelFirst.title + '_' + item.levelSecond.title + '技术文档'"
+              class="collection-tag">
+              {{ item.levelSecond.title }}
+            </router-link>
+          </template>
 					<a class="num">
 						<i class="iconfont icon-browse"></i>
 						{{item.views}}
